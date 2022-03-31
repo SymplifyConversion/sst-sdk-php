@@ -5,9 +5,11 @@
 
 set -xe
 
-# Install git (the php image doesn't have it) which is required by composer
+# Install some basic tools not included in the PHP Docker image
+#   - git is required by composer
+#   - wget is required to install composer
 apt-get update -yqq
-apt-get install git -yqq
+apt-get install git wget -yqq
 
 # Install Composer
 wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
