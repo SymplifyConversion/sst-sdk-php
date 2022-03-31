@@ -17,8 +17,8 @@
         }
     ],
     "scripts": {
-        "simple-server": [
-            "@php SimpleServer.php"
+        "serve": [
+            "@php -S localhost:8000"
         ]
     }
 }
