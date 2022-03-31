@@ -1,7 +1,9 @@
 stages:
   - test
 
+# the cache is shared between all jobs in the pipeline
 cache:
+  key: $CI_COMMIT_REF_SLUG
   paths:
     - vendor/
 
