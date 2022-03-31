@@ -1,0 +1,24 @@
+{
+    "name": "symplify/sst-sdk-php-examples",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabian Bergström"
+        }
+    ],
+    "require": {
+		"php": ">=7.4",
+        "symplify/sst-sdk-php": "dev-main"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../"
+        }
+    ],
+    "scripts": {
+        "simple-server": [
+            "@php SimpleServer.php"
+        ]
+    }
+}
