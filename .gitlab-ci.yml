@@ -1,26 +1,26 @@
 stages:
   - test
 
-php_env: &php_env
+.php_env: &php_env
   before_script:
     - ./ci/docker_install.sh > /dev/null
 
 lint:php:
   stage: test
-  << *php_env
+  <<: *php_env
   script:
     - ./ci/lint.sh
 
 test:7.4:
   stage: test
-  << *php_env
+  <<: *php_env
   image: php:7.4
   script:
     - ./ci/test.sh
 
 test:8.1:
   stage: test
-  << *php_env
+  <<: *php_env
   image: php:8.1
   script:
     - ./ci/test.sh
