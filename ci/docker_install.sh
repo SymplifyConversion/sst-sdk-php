@@ -9,7 +9,7 @@ set -xe
 #   - wget is required to install composer
 #   - git and the zip packages are required by composer
 apt-get update -yqq
-apt-get install -yqq wget git zip unzip php-zip
+apt-get install -yqq wget git zip unzip
 
 # Install Composer
 wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
