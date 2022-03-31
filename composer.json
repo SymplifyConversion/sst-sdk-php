@@ -1,0 +1,23 @@
+{
+    "name": "symplify/sst-sdk-php",
+    "description": "Server-Side Testing SDK",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabian Bergström"
+        }
+    ],
+    "type": "library",
+    "require": {
+		"php": ">=7.4"
+    },
+    "require-dev": {
+		"phpunit/phpunit": "9.5.19",
+        "phpstan/phpstan": "1.5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Symplify\\SSTSDK\\": "src/"
+        }
+    }
+}
