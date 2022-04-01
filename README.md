@@ -18,9 +18,18 @@ Coming soon...
 Usage
 =====
 
-See examples of code using the SDK in [./examples](./examples). You can serve them locally by running `composer serve` in that directory.
+See examples of code using the SDK in [./examples](./examples). You can serve
+them locally by running `composer serve` in that directory.
 
 More info coming soon...
+
+Development
+===========
+
+## Troubleshooting
+
+If you get errors about classes not found when running tests, you might have
+lost the autoloader setup. Run `composer install` again.
 
 Beta Tasks
 ==========
