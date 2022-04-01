@@ -21,3 +21,11 @@ Usage
 See examples of code using the SDK in [./examples](./examples). You can serve them locally by running `composer serve` in that directory.
 
 More info coming soon...
+
+Beta Tasks
+==========
+
+- [ ] hashing
+- [ ] visitor ID assignment
+- [ ] variation assignment
+- [ ] config state management
