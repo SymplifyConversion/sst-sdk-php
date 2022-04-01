@@ -1,36 +1,38 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Symplify\SSTSDK\Config;
 
-class SymplifyConfig
+final class SymplifyConfig
 {
-    /** @var int Unix timestamp when this config was last updated */
-    public $updated;
-    /** @var ProjectConfig[] */
-    public $projects;
+
+    /** Unix timestamp when this config was last updated */
+    public int $updated;
+
+    /** @var array<ProjectConfig> */
+    public array $projects;
 
     /**
-     * @param int $updated
-     * @param ProjectConfig[] $projects
+     * @param array<ProjectConfig> $projects
      */
-    function __construct($updated, $projects)
+    function __construct(int $updated, array $projects)
     {
         $this->updated = $updated;
         $this->projects = $projects;
     }
 
     /**
-     * @param mixed $data
+     * @param array<mixed> $data
      */
-    public static function fromArray($data): SymplifyConfig
+    public static function fromArray(array $data): SymplifyConfig
     {
 
         $updated = $data['updated'] ?? 0;
 
-        /** @var ProjectConfig[] */
+        /** @var array<ProjectConfig> $projects */
         $projects = [];
+
         foreach ($data['projects'] ?? [] as $projectData) {
             $projects[] = ProjectConfig::fromArray($projectData);
         }
@@ -43,9 +45,12 @@ class SymplifyConfig
         // depth==6 because config format has:
         // root > projects array > project object > variations array > variation object > leaf value
         $data = json_decode($json, true, 6, JSON_ERROR_SYNTAX) ?? [];
-        if (json_last_error() !== JSON_ERROR_NONE) {
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
             return null;
         }
+
         return self::fromArray($data);
     }
+
 }

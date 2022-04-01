@@ -1,28 +1,29 @@
 <?php
+
 declare(strict_types = 1);
 
 namespace Symplify\SSTSDK;
 
 /**
- * An client SDK for Symplify Server-Side Testing.
+ * A client SDK for Symplify Server-Side Testing.
  *
  * The client maintains configuration for server-side tests for a website. It
- * also provides functions for allocating variations and assining visitor IDs. 
- *
+ * also provides functions for allocating variations and assigning visitor IDs.
  */
-class Client
+final class Client
 {
 
-   /**  @var string $websiteID the ID of the website you run tests on */
-   private $websiteID = '';
+    /** @var string $websiteID the ID of the website you run tests on */
+    private string $websiteID;
 
-   function __construct(string $websiteID)
-   {
-      $this->websiteID = $websiteID;
-   }
+    function __construct(string $websiteID)
+    {
+        $this->websiteID = $websiteID;
+    }
 
-   public function hello(): string
-   {
-      return "Hello $this->websiteID World";
-   }
+    public function hello(): string
+    {
+        return "Hello $this->websiteID World";
+    }
+
 }

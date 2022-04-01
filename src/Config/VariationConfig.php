@@ -1,23 +1,19 @@
 <?php
+
 declare(strict_types = 1);
 
 namespace Symplify\SSTSDK\Config;
 
-class VariationConfig
+final class VariationConfig
 {
-    /** @var int */
-    public $id;
-    /** @var string */
-    public $name;
-    /** @var float */
-    public $weight;
 
-    /**
-     * @param int $id
-     * @param string $name
-     * @param float $weight
-     */
-    function __construct($id, $name, $weight)
+    public int $id;
+
+    public string $name;
+
+    public float $weight;
+
+    function __construct(int $id, string $name, float $weight)
     {
         $this->id = $id;
         $this->name = $name;
@@ -25,9 +21,9 @@ class VariationConfig
     }
 
     /**
-     * @param mixed $data
+     * @param array<mixed> $data
      */
-    public static function fromArray($data): VariationConfig {
+    public static function fromArray(array $data): VariationConfig {
 
         $id = $data['id'] ?? 0;
         $name = $data['name'] ?? '';
@@ -35,4 +31,5 @@ class VariationConfig
 
         return new VariationConfig($id, $name, $weight);
     }
+
 }
