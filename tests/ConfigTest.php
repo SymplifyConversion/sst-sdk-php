@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 use PHPUnit\Framework\TestCase;
 use Symplify\SSTSDK\Config\SymplifyConfig;
-
 use function PHPUnit\Framework\assertEmpty;
 use function PHPUnit\Framework\assertEquals;
 
@@ -129,26 +128,26 @@ final class ConfigTest extends TestCase
     public function testCanBeCreatedFromValidJSON(): void
     {
         $testConfig = SymplifyConfig::fromJSON(CONFIG_JSON_DISCOUNT);
-        $this->assertEquals(1648466732, $testConfig->updated);
+        assertEquals(1648466732, $testConfig->updated);
 
         $testProject = $testConfig->projects[0];
-        $this->assertEquals(4711, $testProject->id);
-        $this->assertEquals('discount', $testProject->name);
+        assertEquals(4711, $testProject->id);
+        assertEquals('discount', $testProject->name);
 
         $testVariationOriginal = $testProject->variations[0];
-        $this->assertEquals(42, $testVariationOriginal->id);
-        $this->assertEquals('original', $testVariationOriginal->name);
-        $this->assertEquals(10, $testVariationOriginal->weight);
+        assertEquals(42, $testVariationOriginal->id);
+        assertEquals('original', $testVariationOriginal->name);
+        assertEquals(10, $testVariationOriginal->weight);
 
         $testVariationHuge = $testProject->variations[1];
-        $this->assertEquals(1337, $testVariationHuge->id);
-        $this->assertEquals('huge', $testVariationHuge->name);
-        $this->assertEquals(2, $testVariationHuge->weight);
+        assertEquals(1337, $testVariationHuge->id);
+        assertEquals('huge', $testVariationHuge->name);
+        assertEquals(2, $testVariationHuge->weight);
 
         $testVariationSmall = $testProject->variations[2];
-        $this->assertEquals(9999, $testVariationSmall->id);
-        $this->assertEquals('small', $testVariationSmall->name);
-        $this->assertEquals(1, $testVariationSmall->weight);
+        assertEquals(9999, $testVariationSmall->id);
+        assertEquals('small', $testVariationSmall->name);
+        assertEquals(1, $testVariationSmall->weight);
     }
 
     public function testCannotBeCreatedFromInvalidJSON(): void
