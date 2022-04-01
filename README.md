@@ -34,7 +34,7 @@ lost the autoloader setup. Run `composer install` again.
 Beta Tasks
 ==========
 
-- [ ] hashing
+- [x] hashing
 - [ ] visitor ID assignment
 - [ ] variation assignment
 - [ ] config state management
