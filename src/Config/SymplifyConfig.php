@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Symplify\SSTSDK\Config;
 
@@ -18,7 +18,7 @@ final class SymplifyConfig
      */
     function __construct(int $updated, array $projects)
     {
-        $this->updated = $updated;
+        $this->updated  = $updated;
         $this->projects = $projects;
     }
 

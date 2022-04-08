@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Symplify\SSTSDK;
 
@@ -38,7 +38,7 @@ final class Hash
         $hash   = 5_381;
         $length = strlen($str);
 
-        for ($i = 0; $i < $length; $i+=1) {
+        for ($i = 0; $i < $length; $i += 1) {
             $c    = ord($str[$i]);
             $hash = 33 * $hash & 0xFFFFFFFF ^ $c;
         }
