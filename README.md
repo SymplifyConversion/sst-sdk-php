@@ -23,8 +23,24 @@ them locally by running `composer serve` in that directory.
 
 More info coming soon...
 
-Development
-===========
+SDK Development
+===============
+
+## Testing
+
+The `examples` directory contains example scripts to show how to use the SDK,
+but they are also a nice way to test locally during development.
+
+```
+$ cd examples
+$ SSTSDK_WEBSITE_ID=4711 php -q -S localhost:8910 &
+$ curl http://localhost:8910/Hello.php
+Hello 4711 World (1)
+
+$ curl http://localhost:8910/Hello.php
+Hello 4711 World (2)
+
+```
 
 ## Troubleshooting
 
@@ -35,6 +51,7 @@ Beta Tasks
 ==========
 
 - [x] hashing
+- [ ] fake config server for e2e testing
 - [ ] visitor ID assignment
 - [ ] variation assignment
 - [ ] config state management
