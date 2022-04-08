@@ -6,6 +6,8 @@ namespace Symplify\SSTSDK;
 
 use Psr\Cache\CacheItemPoolInterface;
 
+const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
+
 /**
  * A client SDK for Symplify Server-Side Testing.
  *
@@ -21,10 +23,30 @@ final class Client
     /** @var CacheItemPoolInterface a cache pool to keep SST configuration in */
     private CacheItemPoolInterface $cachePool;
 
-    function __construct(string $websiteID, CacheItemPoolInterface $cachePool)
+    /** @var string the base CDN URL from which to construct config URLs */
+    private string $cdnBaseURL;
+
+    /**
+     * @throws \InvalidArgumentException if $cdnBaseURL is not a URL, or has no scheme or host
+     */
+    function __construct(string $websiteID, CacheItemPoolInterface $cachePool, string $cdnBaseURL = DEFAULT_CDN_BASEURL)
     {
-        $this->websiteID = $websiteID;
-        $this->cachePool = $cachePool;
+        $parsedURL = parse_url($cdnBaseURL);
+
+        if (!$parsedURL || !array_key_exists('scheme', $parsedURL) || !array_key_exists('host', $parsedURL)) {
+            $message = "malformed \$cdnBaseURL ($cdnBaseURL), cannot create SDK client";
+
+            throw new \InvalidArgumentException($message);
+        }
+
+        $this->websiteID  = $websiteID;
+        $this->cachePool  = $cachePool;
+        $this->cdnBaseURL = $cdnBaseURL;
+    }
+
+    function getConfigURL(): string
+    {
+        return "$this->cdnBaseURL/$this->websiteID/sstConfig.json";
     }
 
     public function hello(): string
