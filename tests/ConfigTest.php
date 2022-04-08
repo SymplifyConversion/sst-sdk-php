@@ -173,4 +173,10 @@ final class ConfigTest extends TestCase
         $testConfig = SymplifyConfig::fromJSON(CONFIG_JSON_MISSING_VARIATION_PROPERTY);
         assertEquals(1, $testConfig->projects[0]->variations[2]->weight);
     }
+
+    public function testCanBeCached(): void
+    {
+        $testConfig = SymplifyConfig::fromJSON(CONFIG_JSON_DISCOUNT);
+        assertEquals($testConfig, unserialize(serialize($testConfig)));
+    }
 }
