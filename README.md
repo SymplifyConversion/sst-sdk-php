@@ -32,8 +32,8 @@ The `examples` directory contains example scripts to show how to use the SDK,
 but they are also a nice way to test locally during development.
 
 ```
-$ cd examples
-$ SSTSDK_WEBSITE_ID=4711 php -q -S localhost:8910 &
+# this starts php, serving the contents of examples, with some setup for the SDK
+$ (cd examples; ./example-server.sh) &
 $ curl http://localhost:8910/Hello.php
 Hello 4711 World (1)
 
@@ -51,7 +51,7 @@ Beta Tasks
 ==========
 
 - [x] hashing
-- [ ] fake config server for e2e testing
+- [x] fake config server for e2e testing
 - [ ] visitor ID assignment
 - [ ] variation assignment
 - [ ] config state management
