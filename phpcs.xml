@@ -63,7 +63,6 @@
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullSafeObjectOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireSingleLineCondition"/>
-    <rule ref="SlevomatCodingStandard.ControlStructures.RequireTernaryOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireYodaComparison"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.UselessTernaryOperator"/>

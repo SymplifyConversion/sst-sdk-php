@@ -66,7 +66,6 @@ final class Client
     function downloadURLContents(string $url): ?string
     {
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_VERBOSE, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_URL, $url);
         $result = curl_exec($curl);

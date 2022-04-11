@@ -14,14 +14,24 @@ $pool              = new FilesystemCachePool($filesystem, '.cache-hello');
 $websiteID  = getenv('SSTSDK_WEBSITE_ID');
 $cdnBaseURL = getenv('SSTSDK_CDN_BASEURL');
 
-$sdk = new SSTSDK\Client($websiteID, $pool, $cdnBaseURL);
+if ($cdnBaseURL) {
+    $sdk = new SSTSDK\Client($websiteID, $pool, $cdnBaseURL);
+} else {
+    $sdk = new SSTSDK\Client($websiteID, $pool);
+}
 
 // simple cache exercise
 echo $sdk->hello() . PHP_EOL;
 
-echo "Getting config from:";
+echo "Getting config from: ";
 echo $sdk->getConfigURL() . " ... ";
 $cfg = $sdk->fetchConfig();
+
+if (!$cfg) {
+    echo "no config downloaded!" . PHP_EOL;
+    exit;
+}
+
 echo "OK" . PHP_EOL;
 
 printf("Projects (as of %s)\n", date("c", $cfg->updated));
