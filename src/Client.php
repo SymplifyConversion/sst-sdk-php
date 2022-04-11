@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Symplify\SSTSDK;
 
 use Psr\Cache\CacheItemPoolInterface;
+use Symplify\SSTSDK\Config\SymplifyConfig;
 
 const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
 
@@ -47,6 +48,31 @@ final class Client
     function getConfigURL(): string
     {
         return "$this->cdnBaseURL/$this->websiteID/sstConfig.json";
+    }
+
+    function fetchConfig(): ?SymplifyConfig
+    {
+        $response = $this->downloadURLContents($this->getConfigURL());
+
+        if (!$response) {
+            error_log('[SSTSDK] could not download latest config');
+
+            return null;
+        }
+
+        return SymplifyConfig::fromJSON($response);
+    }
+
+    function downloadURLContents(string $url): ?string
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_VERBOSE, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        $result = curl_exec($curl);
+        curl_close($curl);
+
+        return $result;
     }
 
     public function hello(): string

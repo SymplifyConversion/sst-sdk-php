@@ -9,6 +9,7 @@
   ],
   "require": {
     "php": ">=7.4",
+    "ext-curl": "*",
     "ext-json": "*",
     "cache/adapter-common": "1.3.0"
   },

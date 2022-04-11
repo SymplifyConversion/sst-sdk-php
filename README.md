@@ -55,3 +55,4 @@ Beta Tasks
 - [ ] visitor ID assignment
 - [ ] variation assignment
 - [ ] config state management
+- [ ] use PSR-7 / PSR-18 for HTTP fetch

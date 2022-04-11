@@ -507,14 +507,16 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "c0114e9b1ed36ddf5be764c547cba3b4f40198e9"
+                "reference": "2556651729a64303f514b25c6893188b3de0a3f2"
             },
             "require": {
                 "cache/adapter-common": "1.3.0",
+                "ext-curl": "*",
                 "ext-json": "*",
                 "php": ">=7.4"
             },
             "require-dev": {
+                "cache/array-adapter": "1.2.0",
                 "phpstan/phpstan": "1.5.3",
                 "phpunit/phpunit": "9.5.19",
                 "slevomat/coding-standard": "7.1",
