@@ -7,3 +7,6 @@ find src -name '*.php' -print0 | xargs -0 -P4 -n1 php -l
 composer phpcs
 
 ./vendor/bin/phpstan
+
+cd examples
+../vendor/bin/phpstan
