@@ -9,4 +9,5 @@ composer phpcs
 ./vendor/bin/phpstan
 
 cd examples
+composer install
 ../vendor/bin/phpstan
