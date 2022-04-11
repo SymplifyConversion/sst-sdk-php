@@ -38,4 +38,6 @@ printf("Projects (as of %s)\n", date("c", $cfg->updated));
 
 foreach ($cfg->projects as $proj) {
     echo " * $proj->id: $proj->name" . PHP_EOL;
+    $variationName = $sdk->findVariation($proj->name);
+    echo "   - assigned variation: " . $variationName . PHP_EOL;
 }
