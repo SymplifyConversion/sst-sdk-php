@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Symplify\SSTSDK;
 
-use Psr\Cache\CacheItemPoolInterface;
+use Psr\SimpleCache\CacheInterface;
 use Symplify\SSTSDK\Config\SymplifyConfig;
 
 const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
@@ -21,8 +21,8 @@ final class Client
     /** @var string $websiteID the ID of the website you run tests on */
     private string $websiteID;
 
-    /** @var CacheItemPoolInterface a cache pool to keep SST configuration in */
-    private CacheItemPoolInterface $cachePool;
+    /** @var CacheInterface a cache to keep SST configuration in */
+    private CacheInterface $cache;
 
     /** @var string the base CDN URL from which to construct config URLs */
     private string $cdnBaseURL;
@@ -30,7 +30,7 @@ final class Client
     /**
      * @throws \InvalidArgumentException if $cdnBaseURL is not a URL, or has no scheme or host
      */
-    function __construct(string $websiteID, CacheItemPoolInterface $cachePool, string $cdnBaseURL = DEFAULT_CDN_BASEURL)
+    function __construct(string $websiteID, CacheInterface $cache, string $cdnBaseURL = DEFAULT_CDN_BASEURL)
     {
         $parsedURL = parse_url($cdnBaseURL);
 
@@ -41,7 +41,7 @@ final class Client
         }
 
         $this->websiteID  = $websiteID;
-        $this->cachePool  = $cachePool;
+        $this->cache      = $cache;
         $this->cdnBaseURL = $cdnBaseURL;
     }
 
@@ -76,15 +76,11 @@ final class Client
 
     public function hello(): string
     {
-        $counter   = $this->cachePool->getItem('hello_counter');
-        $prevCount = $counter->get();
+        $cacheKey  = 'hello_counter';
+        $prevCount = $this->cache->get($cacheKey);
         $nextCount = ($prevCount ?? 0) + 1;
 
-        $counter->set($nextCount);
-
-        if (!$this->cachePool->save($counter)) {
-            return "could not persist cache update";
-        }
+        $this->cache->set($cacheKey, $nextCount);
 
         return "Hello $this->websiteID World ($nextCount)";
     }
