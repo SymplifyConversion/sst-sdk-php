@@ -16,10 +16,5 @@
             "type": "path",
             "url": "../"
         }
-    ],
-    "scripts": {
-        "serve": [
-            "@php -S localhost:8000"
-        ]
-    }
+    ]
 }
