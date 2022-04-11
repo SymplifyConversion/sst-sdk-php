@@ -6,6 +6,7 @@ namespace Symplify\SSTSDK;
 
 use Psr\SimpleCache\CacheInterface;
 use Symplify\SSTSDK\Config\SymplifyConfig;
+use Symplify\SSTSDK\Cookies\DefaultCookieJar;
 
 const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
 
@@ -61,6 +62,20 @@ final class Client
         }
 
         return SymplifyConfig::fromJSON($response);
+    }
+
+    /**
+     * Returns the name of the variation the visitor is part of in the project with the given name.
+     *
+     * @return string|null the name of the current visitor's assigned variation,
+     *         null if there is no matching project or no visitor ID was found.
+     * @throws \Exception not yet implemented
+     */
+    function findVariation(string $projectName): ?string
+    {
+        $visitorID = Visitor::ensureVisitorID(new DefaultCookieJar());
+
+        throw new \Exception('[SSTSDK] findVariation(' . $visitorID . ', ' . $projectName . '): not yet implemented');
     }
 
     function downloadURLContents(string $url): ?string
