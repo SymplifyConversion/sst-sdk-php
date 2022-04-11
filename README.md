@@ -52,7 +52,7 @@ Beta Tasks
 
 - [x] hashing
 - [x] fake config server for e2e testing
-- [ ] visitor ID assignment
+- [x] visitor ID assignment
 - [ ] variation assignment
 - [ ] config state management
 - [ ] use PSR-3 for logging
