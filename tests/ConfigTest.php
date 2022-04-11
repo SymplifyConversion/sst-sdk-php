@@ -38,6 +38,35 @@ const CONFIG_JSON_DISCOUNT = '
 }
 ';
 
+const CONFIG_JSON_WITH_BOM = "\xEF\xBB\xBF" . '
+{
+    "updated": 1648466732,
+    "projects": [
+        {
+            "id": 4711,
+            "name": "discount",
+            "variations": [
+                {
+                    "id": 42,
+                    "name": "original",
+                    "weight": 10
+                },
+                {
+                    "id": 1337,
+                    "name": "huge",
+                    "weight": 2
+                },
+                {
+                    "id": 9999,
+                    "name": "small",
+                    "weight": 1
+                }
+            ]
+        }
+    ]
+}
+';
+
 const CONFIG_JSON_MISSING_ROOT_PROPERTY = '
 {
     "projects": [
@@ -148,6 +177,14 @@ final class ConfigTest extends TestCase
         assertEquals(9999, $testVariationSmall->id);
         assertEquals('small', $testVariationSmall->name);
         assertEquals(1, $testVariationSmall->weight);
+    }
+
+    public function testCanBeCreatedFromValidJSONWithBOM(): void
+    {
+        $testConfig = SymplifyConfig::fromJSON(CONFIG_JSON_WITH_BOM);
+        assertEquals(1648466732, $testConfig->updated);
+        assertEquals(1, count($testConfig->projects));
+        assertEquals(3, count($testConfig->projects[0]->variations));
     }
 
     public function testCannotBeCreatedFromInvalidJSON(): void

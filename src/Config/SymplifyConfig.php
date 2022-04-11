@@ -42,11 +42,16 @@ final class SymplifyConfig
 
     public static function fromJSON(string $json): ?SymplifyConfig
     {
+        // strip BOM, if any
+        $json = ltrim($json, "\xEF\xBB\xBF");
+
         // depth==6 because config format has:
         // root > projects array > project object > variations array > variation object > leaf value
-        $data = json_decode($json, true, 6, JSON_ERROR_SYNTAX) ?? [];
+        $data = json_decode($json, true, 6, JSON_ERROR_SYNTAX);
 
-        if (JSON_ERROR_NONE !== json_last_error()) {
+        if (!$data || JSON_ERROR_NONE !== json_last_error()) {
+            error_log('[SSTSDK] could not parse config JSON: ' . json_last_error_msg());
+
             return null;
         }
 
