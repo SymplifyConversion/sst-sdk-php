@@ -6,7 +6,7 @@ This is the PHP implementation of the [Symplify Server-Side Testing SDK](./docs/
 Requirements
 ============
 
-* [PHP](https://www.php.net) 7.3 or later
+* [PHP](https://www.php.net) 7.4 or later
 * [Composer](https://getcomposer.org)
 
 Installing
