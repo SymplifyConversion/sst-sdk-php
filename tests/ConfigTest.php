@@ -38,6 +38,35 @@ const CONFIG_JSON_DISCOUNT = '
 }
 ';
 
+const CONFIG_JSON_WITH_FLOAT_WEIGHTS = '
+{
+    "updated": 1648466732,
+    "projects": [
+        {
+            "id": 4711,
+            "name": "discount",
+            "variations": [
+                {
+                    "id": 42,
+                    "name": "original",
+                    "weight": 10.99
+                },
+                {
+                    "id": 1337,
+                    "name": "huge",
+                    "weight": 2.9
+                },
+                {
+                    "id": 9999,
+                    "name": "small",
+                    "weight": 1.9
+                }
+            ]
+        }
+    ]
+}
+';
+
 const CONFIG_JSON_WITH_BOM = "\xEF\xBB\xBF" . '
 {
     "updated": 1648466732,
@@ -157,6 +186,31 @@ final class ConfigTest extends TestCase
     public function testCanBeCreatedFromValidJSON(): void
     {
         $testConfig = SymplifyConfig::fromJSON(CONFIG_JSON_DISCOUNT);
+        assertEquals(1648466732, $testConfig->updated);
+
+        $testProject = $testConfig->projects[0];
+        assertEquals(4711, $testProject->id);
+        assertEquals('discount', $testProject->name);
+
+        $testVariationOriginal = $testProject->variations[0];
+        assertEquals(42, $testVariationOriginal->id);
+        assertEquals('original', $testVariationOriginal->name);
+        assertEquals(10, $testVariationOriginal->weight);
+
+        $testVariationHuge = $testProject->variations[1];
+        assertEquals(1337, $testVariationHuge->id);
+        assertEquals('huge', $testVariationHuge->name);
+        assertEquals(2, $testVariationHuge->weight);
+
+        $testVariationSmall = $testProject->variations[2];
+        assertEquals(9999, $testVariationSmall->id);
+        assertEquals('small', $testVariationSmall->name);
+        assertEquals(1, $testVariationSmall->weight);
+    }
+
+    public function testFloatWeightsAreFloored(): void
+    {
+        $testConfig = SymplifyConfig::fromJSON(CONFIG_JSON_WITH_FLOAT_WEIGHTS);
         assertEquals(1648466732, $testConfig->updated);
 
         $testProject = $testConfig->projects[0];

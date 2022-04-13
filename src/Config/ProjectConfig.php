@@ -43,4 +43,15 @@ final class ProjectConfig
         return new ProjectConfig($id, $name, $variations);
     }
 
+    function findVariationWithID(int $variationID): ?VariationConfig
+    {
+        foreach ($this->variations as $variation) {
+            if ($variation->id === $variationID) {
+                return $variation;
+            }
+        }
+
+        return null;
+    }
+
 }

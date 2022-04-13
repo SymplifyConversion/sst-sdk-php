@@ -51,7 +51,6 @@
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowContinueWithoutIntegerOperandInSwitch"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowEmpty"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowNullSafeObjectOperator"/>
-    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowShortTernaryOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.LanguageConstructWithParentheses"/>
@@ -98,7 +97,6 @@
     <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
     <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing"/>
     <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
-    <rule ref="SlevomatCodingStandard.Numbers.RequireNumericLiteralSeparator"/>
     <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
     <rule ref="SlevomatCodingStandard.Operators.DisallowIncrementAndDecrementOperators"/>
     <rule ref="SlevomatCodingStandard.Operators.NegationOperatorSpacing"/>
