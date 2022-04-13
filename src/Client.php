@@ -28,6 +28,9 @@ final class Client
     /** @var string the base CDN URL from which to construct config URLs */
     private string $cdnBaseURL;
 
+    /** @var ?SymplifyConfig the latest SST configuration we have seen */
+    private ?SymplifyConfig $config;
+
     /**
      * @throws \InvalidArgumentException if $cdnBaseURL is not a URL, or has no scheme or host
      */
@@ -44,24 +47,7 @@ final class Client
         $this->websiteID  = $websiteID;
         $this->cache      = $cache;
         $this->cdnBaseURL = $cdnBaseURL;
-    }
-
-    function getConfigURL(): string
-    {
-        return "$this->cdnBaseURL/$this->websiteID/sstConfig.json";
-    }
-
-    function fetchConfig(): ?SymplifyConfig
-    {
-        $response = $this->downloadURLContents($this->getConfigURL());
-
-        if (!$response) {
-            error_log('[SSTSDK] could not download latest config');
-
-            return null;
-        }
-
-        return SymplifyConfig::fromJSON($response);
+        $this->config     = null;
     }
 
     /**
@@ -71,24 +57,40 @@ final class Client
      *         null if there is no matching project or no visitor ID was found.
      * @throws \Exception not yet implemented
      */
-    function findVariation(string $projectName): ?string
+    public function findVariation(string $projectName): ?string
     {
-        $visitorID = Visitor::ensureVisitorID(new DefaultCookieJar());
+        try {
+            if (!$this->config) {
+                error_log('[SSTSDK] findVariation called before config is available');
 
-        throw new \Exception('[SSTSDK] findVariation(' . $visitorID . ', ' . $projectName . '): not yet implemented');
+                return null;
+            }
+
+            $foundProject = $this->config->findProjectWithName($projectName);
+
+            if (!$foundProject) {
+                return null;
+            }
+
+            $visitorID      = Visitor::ensureVisitorID(new DefaultCookieJar());
+            $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
+
+            return $foundVariation->name;
+        } catch (\Throwable $t) {
+            error_log('[SSTSDK] findVariation failed: ' . $t->getMessage());
+
+            return null;
+        }
     }
 
-    function downloadURLContents(string $url): ?string
+    function getConfigURL(): string
     {
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        return $result;
+        return "$this->cdnBaseURL/$this->websiteID/sstConfig.json";
     }
 
+    /**
+     * Temp cache testing function
+     */
     public function hello(): string
     {
         $cacheKey  = 'hello_counter';
@@ -100,4 +102,47 @@ final class Client
         return "Hello $this->websiteID World ($nextCount)";
     }
 
+    /**
+     * Download the current SST config.
+     */
+    function fetchConfig(): ?SymplifyConfig
+    {
+        $response = downloadURLContents($this->getConfigURL());
+
+        if (!$response) {
+            error_log('[SSTSDK] could not download latest config');
+
+            return null;
+        }
+
+        return SymplifyConfig::fromJSON($response);
+    }
+
+    /**
+     * Download the current SST config and cache it for re-use.
+     */
+    function loadConfig(): void
+    {
+        $config = $this->fetchConfig();
+
+        if (!$config) {
+            error_log('[SSTSDK] could not download latest config');
+
+            return;
+        }
+
+        $this->config = $config;
+    }
+
+}
+
+function downloadURLContents(string $url): ?string
+{
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    $result = curl_exec($curl);
+    curl_close($curl);
+
+    return $result ?: null;
 }

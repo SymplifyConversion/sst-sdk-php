@@ -11,9 +11,10 @@ final class VariationConfig
 
     public string $name;
 
-    public float $weight;
+    /** @var int relative variation weight */
+    public int $weight;
 
-    function __construct(int $id, string $name, float $weight)
+    function __construct(int $id, string $name, int $weight)
     {
         $this->id     = $id;
         $this->name   = $name;
@@ -30,7 +31,7 @@ final class VariationConfig
         $name   = $data['name'] ?? '';
         $weight = $data['weight'] ?? 1;
 
-        return new VariationConfig($id, $name, $weight);
+        return new VariationConfig($id, $name, (int)$weight);
     }
 
 }

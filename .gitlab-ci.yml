@@ -25,6 +25,13 @@ test:7.4:
   script:
     - ./ci/test.sh
 
+test:8.0:
+  stage: test
+  <<: *php_env
+  image: php:8.0
+  script:
+    - ./ci/test.sh
+
 test:8.1:
   stage: test
   <<: *php_env

@@ -34,6 +34,8 @@ if (!$cfg) {
 
 echo "OK" . PHP_EOL;
 
+$sdk->loadConfig();
+
 printf("Projects (as of %s)\n", date("c", $cfg->updated));
 
 foreach ($cfg->projects as $proj) {

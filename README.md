@@ -74,10 +74,22 @@ locally during development.
 $ (cd examples; ./example-server.sh) &
 $ curl http://localhost:8910/Hello.php
 Hello 4711 World (1)
+Getting config from: http://localhost:8911/4711/sstConfig.json ... OK
+Projects (as of 2022-03-28T11:25:32+00:00)
+ * 4711: discount
+   - assigned variation: huge
 
 $ curl http://localhost:8910/Hello.php
 Hello 4711 World (2)
+Getting config from: http://localhost:8911/4711/sstConfig.json ... OK
+Projects (as of 2022-03-28T11:25:32+00:00)
+ * 4711: discount
+   - assigned variation: small
+```
 
+You can get stable responses by configuring curl for cookies e.g.
+```
+curl --cookie cookiejar.txt --cookie-jar cookiejar.txt http://localhost:8910/Hello.php
 ```
 
 ## Troubleshooting
@@ -91,7 +103,7 @@ Beta Tasks
 - [x] hashing
 - [x] fake config server for e2e testing
 - [x] visitor ID assignment
-- [ ] variation assignment
+- [x] variation assignment
 - [ ] config state management
 - [ ] use PSR-3 for logging
 - [ ] use PSR-7 / PSR-18 for HTTP fetch

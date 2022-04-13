@@ -45,7 +45,7 @@ function newCookieJar(): CookieJar
 {
     return new class implements CookieJar {
 
-        /** @var array<string> $cookies in-memory array for cookie testing */
+        /** @var array<string> in-memory array for cookie testing */
         var array $cookies = [];
 
         public function getCookie(string $name): string

@@ -58,4 +58,15 @@ final class SymplifyConfig
         return self::fromArray($data);
     }
 
+    function findProjectWithName(string $projectName): ?ProjectConfig
+    {
+        foreach ($this->projects as $project) {
+            if ($project->name === $projectName) {
+                return $project;
+            }
+        }
+
+        return null;
+    }
+
 }
