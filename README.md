@@ -3,6 +3,13 @@ Symplify Server-Side Testing SDK for PHP
 
 This is the PHP implementation of the [Symplify Server-Side Testing SDK](./docs/Server-Side_Testing.md).
 
+Due to the PHP concurrency model, the SDK is not keeping its own local cache for
+the config, there simply is no great way to organize the invalidation logic when
+the purpose of the caching is to keep the hot path fast.
+
+Instead, we recommend you configure the HTTP client (can be injected to the SDK)
+to do HTTP caching. See [Usage](#Usage) below.
+
 Requirements
 ============
 
@@ -17,24 +24,19 @@ Coming soon...
 Usage
 =====
 
-This example uses `Flysystem` and `FilesystemCachePool`, but any PSR-16 compatible cache interface works.
+Using ext-curl for HTTP requests:
 
 ```php
-use Cache\Adapter\Filesystem\FilesystemCachePool;
-use League\Flysystem;
-use Symplify\SSTSDK;
+[...]
+use Symplify\SSTSDK\Client as SymplifyClient;
+[...]
 
 // 1. configure the SDK and create an instance
 
 $websiteID  = getenv('SYMPLIFY_WEBSITE_ID');
+$sdk = SymplifyClient::withDefaults($websiteID);
 
-$filesystemAdapter = new Flysystem\Adapter\Local(__DIR__ . '/');
-$filesystem        = new Flysystem\Filesystem($filesystemAdapter);
-$pool              = new FilesystemCachePool($filesystem, '.cache-hello');
-
-$sdk = new SSTSDK\Client($websiteID, $pool);
-
-// 2. Start off with "default" values, for everyone outside the test
+// 2. Start off with the "default" values for everyone outside the test
 //    and in the original variation.
 
 // assuming $sku is from the request, and you have a $catalog service to look up prices in
@@ -56,15 +58,50 @@ case 'small':
 renderProductPage($sku, $price, $discounts);
 ```
 
-The cache is used for persisting the SST configuration between requests to avoid having that extra latency in your hot
-path.
+Note that with the curl HTTP client you get no local caching, and thus depend
+on our CDN for each request. You can use any HTTP client compatible with PSR-17
+and PSR-18 instead of curl, and leverage their caching features. This is of
+course a bit more involved:
+
+```php
+[...]
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Psr7\HttpFactory;
+use GuzzleHttp\HandlerStack;
+use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
+use Kevinrob\GuzzleCache\Storage\Psr16CacheStorage;
+use Kevinrob\GuzzleCache\CacheMiddleware;
+use Kodus\Cache\FileCache;
+use Symplify\SSTSDK\Client as SymplifyClient;
+use Symplify\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
+[...]
+
+// 1. configure the SDK and create an instance
+
+$websiteID    = getenv('SSTSDK_WEBSITE_ID');
+
+$cache           = new Psr16CacheStorage(new FileCache('/tmp/sstsdk-examples-httpcache', 500));
+$cacheMiddleware = new CacheMiddleware(new PublicCacheStrategy($cache));
+$stack           = HandlerStack::create();
+$stack->push($cacheMiddleware, 'cache');
+
+$clientConfig = (new SymplifyClientConfig($websiteID))
+    ->withHttpClient(new HttpClient(['handler' => $stack]))
+    ->withHttpRequests(new HttpFactory());
+
+$sdk = new SymplifyClient($clientConfig);
+// the constructor does not load config automatically
+$sdk->loadConfig();
+
+// steps 2 and 3 are the same as in the previous example
+```
 
 See more examples of code using the SDK in [./examples](./examples).
 
 SDK Development
 ===============
 
-## Testing
+## Local Testing
 
 The `examples` directory contains example scripts to show how to use the SDK, but they are also a nice way to test
 locally during development.
@@ -72,22 +109,26 @@ locally during development.
 ```
 # this starts php, serving the contents of examples, with some setup for the SDK
 $ (cd examples; ./example-server.sh) &
-$ curl http://localhost:8910/Hello.php
-Hello 4711 World (1)
-Getting config from: http://localhost:8911/4711/sstConfig.json ... OK
-Projects (as of 2022-03-28T11:25:32+00:00)
- * 4711: discount
-   - assigned variation: huge
+$ curl http://localhost:8910/WithCustomHttpClient.php
+[Wed Apr 13 18:51:56 2022] 127.0.0.1:52273 Accepted
+[Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 Accepted
+[Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 [ExamplesCDN:info] GET /4711/sstConfig.json
+[Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 Closing
+[Wed Apr 13 18:51:56 2022] 127.0.0.1:52273 [200]: GET /WithCustomHttpClient.php
+[Wed Apr 13 18:51:56 2022] 127.0.0.1:52273 Closing
+ * discount
+   - assigned variation: original
 
-$ curl http://localhost:8910/Hello.php
-Hello 4711 World (2)
-Getting config from: http://localhost:8911/4711/sstConfig.json ... OK
-Projects (as of 2022-03-28T11:25:32+00:00)
- * 4711: discount
-   - assigned variation: small
+$ curl http://localhost:8910/WithCustomHttpClient.php
+[Wed Apr 13 18:51:58 2022] 127.0.0.1:52275 Accepted
+[Wed Apr 13 18:51:58 2022] 127.0.0.1:52275 [200]: GET /WithCustomHttpClient.php
+[Wed Apr 13 18:51:58 2022] 127.0.0.1:52275 Closing
+ * discount
+   - assigned variation: original
+
 ```
 
-You can get stable responses by configuring curl for cookies e.g.
+You can get stable variation allocations by configuring curl for cookies e.g.
 ```
 curl --cookie cookiejar.txt --cookie-jar cookiejar.txt http://localhost:8910/Hello.php
 ```
@@ -104,6 +145,6 @@ Beta Tasks
 - [x] fake config server for e2e testing
 - [x] visitor ID assignment
 - [x] variation assignment
-- [ ] config state management
+- [-] config state management (we rely on HTTP caching)
 - [ ] use PSR-3 for logging
-- [ ] use PSR-7 / PSR-18 for HTTP fetch
+- [x] use PSR-7, PSR-17, PSR-18 for HTTP fetch

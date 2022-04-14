@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Cache\Adapter\PHPArray\ArrayCachePool;
 use PHPUnit\Framework\TestCase;
 use Symplify\SSTSDK\Client;
+use Symplify\SSTSDK\Config\ClientConfig;
 use function PHPUnit\Framework\assertEquals;
 
 final class ClientTest extends TestCase
@@ -14,30 +14,29 @@ final class ClientTest extends TestCase
     {
         $this->expectException('InvalidArgumentException');
 
-        $cachePool = new ArrayCachePool();
-        new Client('4711', $cachePool, 'goober');
+        $cfg = (new ClientConfig('4711'))->withCdnBaseURL('cdn.example.com');
+        new Client($cfg);
     }
 
     public function testGetConfigURLDefaultCDN(): void
     {
-        $cachePool = new ArrayCachePool();
-        $client    = new Client('4711', $cachePool);
+        $client = Client::withDefaults('4711');
 
         assertEquals('https://cdn-sitegainer.com/4711/sstConfig.json', $client->getConfigURL());
     }
 
     public function testGetConfigURLOverrideCDN(): void
     {
-        $cachePool = new ArrayCachePool();
-        $client    = new Client('1337', $cachePool, 'https://cdn.example.com');
+        $cfg    = (new ClientConfig('1337'))->withCdnBaseURL('https://cdn.example.com');
+        $client = new Client($cfg);
 
         assertEquals('https://cdn.example.com/1337/sstConfig.json', $client->getConfigURL());
     }
 
     public function testGetConfigURLLocalhostCDN(): void
     {
-        $cachePool = new ArrayCachePool();
-        $client    = new Client('42', $cachePool, 'http://localhost:9000');
+        $cfg    = (new ClientConfig('42'))->withCdnBaseURL('http://localhost:9000');
+        $client = new Client($cfg);
 
         assertEquals('http://localhost:9000/42/sstConfig.json', $client->getConfigURL());
     }
