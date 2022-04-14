@@ -22,7 +22,7 @@ trap cleanup INT TERM
 php -S "$EXAMPLE_SERVER_ADDR" &
 pid_server=$!
 
-php -S "$EXAMPLE_CDN_ADDR" &
+php -S "$EXAMPLE_CDN_ADDR" ExamplesCDN.php &
 pid_cdn=$!
 
 cleanup() {

@@ -2,44 +2,19 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Cache\Adapter\Filesystem\FilesystemCachePool;
-use League\Flysystem;
-
-use Symplify\SSTSDK;
-
-$filesystemAdapter = new Flysystem\Adapter\Local(__DIR__ . '/');
-$filesystem        = new Flysystem\Filesystem($filesystemAdapter);
-$pool              = new FilesystemCachePool($filesystem, '.cache-hello');
+use Symplify\SSTSDK\Client as SymplifyClient;
+use Symplify\SSTSDK\Config\ClientConfig;
 
 $websiteID  = getenv('SSTSDK_WEBSITE_ID');
 $cdnBaseURL = getenv('SSTSDK_CDN_BASEURL');
 
-if ($cdnBaseURL) {
-    $sdk = new SSTSDK\Client($websiteID, $pool, $cdnBaseURL);
-} else {
-    $sdk = new SSTSDK\Client($websiteID, $pool);
-}
-
-// simple cache exercise
-echo $sdk->hello() . PHP_EOL;
-
-echo "Getting config from: ";
-echo $sdk->getConfigURL() . " ... ";
-$cfg = $sdk->fetchConfig();
-
-if (!$cfg) {
-    echo "no config downloaded!" . PHP_EOL;
-    exit;
-}
-
-echo "OK" . PHP_EOL;
+$clientConfig = (new ClientConfig($websiteID))->withCdnBaseURL($cdnBaseURL);
+$sdk          = new SymplifyClient($clientConfig);
 
 $sdk->loadConfig();
 
-printf("Projects (as of %s)\n", date("c", $cfg->updated));
-
-foreach ($cfg->projects as $proj) {
-    echo " * $proj->id: $proj->name" . PHP_EOL;
-    $variationName = $sdk->findVariation($proj->name);
+foreach ($sdk->listProjects() as $projectName) {
+    echo " * $projectName" . PHP_EOL;
+    $variationName = $sdk->findVariation($projectName);
     echo "   - assigned variation: " . $variationName . PHP_EOL;
 }
