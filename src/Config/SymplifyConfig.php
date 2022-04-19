@@ -50,8 +50,6 @@ final class SymplifyConfig
         $data = json_decode($json, true, 6, JSON_ERROR_SYNTAX);
 
         if (!$data || JSON_ERROR_NONE !== json_last_error()) {
-            error_log('[SSTSDK] could not parse config JSON: ' . json_last_error_msg());
-
             return null;
         }
 

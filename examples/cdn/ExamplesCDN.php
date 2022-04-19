@@ -10,8 +10,9 @@ declare(strict_types=1);
 
 function log_message(string $level, string $message): void
 {
+    $level = strtoupper($level);
     $remoteAddr = $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'];
-    error_log("$remoteAddr [ExamplesCDN $level] $message");
+    error_log("$remoteAddr [$level] ExamplesCDN: $message");
 }
 
 function exitWith(int $status, string $message): void
@@ -36,7 +37,8 @@ if (strstr($requestURI, '..')) {
     exitWith(400, 'no directory traversal please');
 }
 
-$fileName = ltrim($requestURI, '/');
+$docRoot = $_SERVER["DOCUMENT_ROOT"];
+$fileName = $docRoot . $requestURI;
 
 if (!file_exists($fileName)) {
     exitWith(404, "file not found: $fileName");

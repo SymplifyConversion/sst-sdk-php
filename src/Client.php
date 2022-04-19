@@ -6,6 +6,7 @@ namespace Symplify\SSTSDK;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Symplify\SSTSDK\Config\ClientConfig;
 use Symplify\SSTSDK\Config\SymplifyConfig;
 use Symplify\SSTSDK\Cookies\DefaultCookieJar;
@@ -19,7 +20,7 @@ use Symplify\SSTSDK\Cookies\DefaultCookieJar;
 final class Client
 {
 
-    /** @var string $websiteID the ID of the website you run tests on */
+    /** @var string the ID of the website you run tests on */
     private string $websiteID;
 
     /** @var string the base CDN URL from which to construct config URLs */
@@ -37,17 +38,18 @@ final class Client
     /** @var ?SymplifyConfig the latest SST configuration we have seen */
     private ?SymplifyConfig $config;
 
+    /** @var LoggerInterface a logger to collect messages from the SDK */
+    private LoggerInterface $logger;
+
     /**
      * @throws \InvalidArgumentException if $cdnBaseURL is not a URL, or has no scheme or host.
      * @throws \InvalidArgumentException if an HTTP client is given without a corresponding request factory.
      */
     function __construct(ClientConfig $clientConfig)
     {
-        $websiteID        = $clientConfig->getWebsiteID();
-        $maxDownloadBytes = $clientConfig->getMaxDownloadBytes();
-        $httpRequests     = $clientConfig->getHttpRequests();
-        $cdnBaseURL       = $clientConfig->getCdnBaseURL();
-        $httpClient       = $clientConfig->getHttpClient();
+        $cdnBaseURL   = $clientConfig->getCdnBaseURL();
+        $httpClient   = $clientConfig->getHttpClient();
+        $httpRequests = $clientConfig->getHttpRequests();
 
         $parsedURL = parse_url($cdnBaseURL);
 
@@ -61,11 +63,12 @@ final class Client
             throw new \InvalidArgumentException('HTTP client given without request factory');
         }
 
-        $this->websiteID        = $websiteID;
+        $this->websiteID        = $clientConfig->getWebsiteID();
         $this->cdnBaseURL       = $cdnBaseURL;
         $this->httpClient       = $httpClient;
         $this->httpRequests     = $httpRequests;
-        $this->maxDownloadBytes = $maxDownloadBytes;
+        $this->maxDownloadBytes = $clientConfig->getMaxDownloadBytes();
+        $this->logger           = new PrefixedLogger('SSTSDK: ', $clientConfig->getLogger());
 
         $this->config = null;
     }
@@ -94,7 +97,7 @@ final class Client
         $config = $this->fetchConfig();
 
         if (!$config) {
-            error_log('[SSTSDK] could not download latest config');
+            $this->logger->error('config fetch failed');
 
             return;
         }
@@ -113,7 +116,7 @@ final class Client
     {
         try {
             if (!$this->config) {
-                error_log('[SSTSDK] findVariation called before config is available');
+                $this->logger->error('findVariation called before config is available');
 
                 return null;
             }
@@ -121,15 +124,17 @@ final class Client
             $foundProject = $this->config->findProjectWithName($projectName);
 
             if (!$foundProject) {
+                $this->logger->warning("project does not exist: '$projectName'");
+
                 return null;
             }
 
-            $visitorID      = Visitor::ensureVisitorID(new DefaultCookieJar());
+            $visitorID      = Visitor::ensureVisitorID(new DefaultCookieJar(), $this->logger);
             $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
 
             return $foundVariation->name;
         } catch (\Throwable $t) {
-            error_log('[SSTSDK] findVariation failed: ' . $t->getMessage());
+            $this->logger->error('findVariation failed', ['exception' => $t]);
 
             return null;
         }
@@ -143,7 +148,7 @@ final class Client
     public function listProjects(): array
     {
         if (!$this->config) {
-            error_log('[SSTSDK] listProjects called before config is available');
+            $this->logger->error('listProjects called before config is available');
 
             return [];
         }
@@ -166,12 +171,19 @@ final class Client
         $response = $this->httpClient ? $this->downloadWithPsrHttpClient($url) : $this->downloadWithCurl($url);
 
         if (!$response) {
-            error_log('[SSTSDK] no config JSON to parse');
+            $this->logger->error('no config JSON to parse');
 
             return null;
         }
 
-        return SymplifyConfig::fromJSON($response);
+        $config = SymplifyConfig::fromJSON($response);
+
+        if (!$config) {
+            $info = JSON_ERROR_NONE === json_last_error() ? 'missing fields' : json_last_error_msg();
+            $this->logger->error("could not parse config JSON: $info");
+        }
+
+        return $config;
     }
 
     private function downloadWithCurl(string $url): ?string
@@ -185,7 +197,7 @@ final class Client
         // phpcs:ignore
         curl_setopt($curl, CURLOPT_PROGRESSFUNCTION, function ($dltotal, $dlnow, $ultotal, $ulnow) {
             if ($this->maxDownloadBytes < $dltotal) {
-                error_log('[SSTSDK] SST config is too big');
+                $this->logger->error('SST config is too large');
 
                 return 1; // abort download
             }
@@ -198,7 +210,7 @@ final class Client
         curl_close($curl);
 
         if (!$result || 200 !== $info['http_code']) {
-            error_log('[SSTSDK] could not download latest config');
+            $this->logger->error("could not download latest config, server status: {$info['http_code']}");
 
             return null;
         }
@@ -212,18 +224,19 @@ final class Client
         $response = $this->httpClient->sendRequest($request);
 
         if (200 !== $response->getStatusCode()) {
-            error_log('[SSTSDK] could not download latest config');
+            $this->logger->error("could not download latest config, server status: {$response->getStatusCode()}");
 
             return null;
         }
 
         if ($this->maxDownloadBytes < $response->getBody()->getSize()) {
-            error_log('[SSTSDK] SST config is too big');
+            $this->logger->error('SST config is too large');
 
             return null;
         }
 
-        return $response->getBody()->getContents();
+        // casting to read all the contents, we have already checked the size above
+        return (string)$response->getBody();
     }
 
 }
