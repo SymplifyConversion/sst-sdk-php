@@ -2,8 +2,6 @@
 
 set -xe
 
-composer validate --no-check-all --strict
-
 find src -name '*.php' -print0 | xargs -0 -P4 -n1 php -l
 
 composer phpcs

@@ -16,7 +16,8 @@ lint:php:
   stage: test
   <<: *php_env
   script:
-    - ./ci/lint.sh
+    - ./ci/lint_repo.sh
+    - ./ci/lint_code.sh
 
 test:7.4:
   stage: test
