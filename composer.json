@@ -2,6 +2,7 @@
   "name": "symplify/sst-sdk-php",
   "description": "Server-Side Testing SDK",
   "type": "library",
+  "license": "MIT",
   "authors": [
     {
       "name": "Fabian Bergström"
