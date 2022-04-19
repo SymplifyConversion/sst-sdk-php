@@ -9,10 +9,10 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
-
 final class ClientConfig
 {
+
+    private const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
 
     /** @var string $websiteID the ID of the website you run tests on */
     private string $websiteID;
@@ -35,7 +35,7 @@ final class ClientConfig
     function __construct(string $websiteID)
     {
         $this->websiteID        = $websiteID;
-        $this->cdnBaseURL       = DEFAULT_CDN_BASEURL;
+        $this->cdnBaseURL       = self::DEFAULT_CDN_BASEURL;
         $this->maxDownloadBytes = 1024 * 1024;
         $this->httpClient       = null;
         $this->httpRequests     = null;
