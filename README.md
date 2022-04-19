@@ -146,13 +146,3 @@ curl --cookie cookiejar.txt --cookie-jar cookiejar.txt http://localhost:8910/Hel
 
 If you get errors about classes not found when running tests, you might have lost the autoloader setup.
 Run `composer install` again.
-
-Beta Tasks
-==========
-
-- [x] hashing
-- [x] fake config server for e2e testing
-- [x] visitor ID assignment
-- [x] variation assignment
-- [x] use PSR-3 for logging
-- [x] use PSR-7, PSR-17, PSR-18 for HTTP fetch
