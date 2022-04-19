@@ -112,7 +112,7 @@ $ (cd examples; ./example-server.sh) &
 $ curl http://localhost:8910/WithCustomHttpClient.php
 [Wed Apr 13 18:51:56 2022] 127.0.0.1:52273 Accepted
 [Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 Accepted
-[Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 [ExamplesCDN:info] GET /4711/sstConfig.json
+[Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 [INFO] ExamplesCDN: GET /4711/sstConfig.json
 [Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 Closing
 [Wed Apr 13 18:51:56 2022] 127.0.0.1:52273 [200]: GET /WithCustomHttpClient.php
 [Wed Apr 13 18:51:56 2022] 127.0.0.1:52273 Closing
@@ -145,6 +145,5 @@ Beta Tasks
 - [x] fake config server for e2e testing
 - [x] visitor ID assignment
 - [x] variation assignment
-- [-] config state management (we rely on HTTP caching)
-- [ ] use PSR-3 for logging
+- [x] use PSR-3 for logging
 - [x] use PSR-7, PSR-17, PSR-18 for HTTP fetch

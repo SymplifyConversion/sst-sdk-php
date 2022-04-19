@@ -12,12 +12,16 @@
     "ext-curl": "*",
     "ext-json": "*",
     "psr/http-client": "1.0.1",
-    "psr/http-factory": "1.0.1"
+    "psr/http-factory": "1.0.1",
+    "psr/log": "1.1.4"
   },
   "require-dev": {
     "cache/array-adapter": "1.2.0",
+    "nyholm/psr7": "1.5.0",
+    "php-http/mock-client": "1.5.0",
     "phpunit/phpunit": "9.5.19",
     "phpstan/phpstan": "1.5.3",
+    "psr/cache": "1.0.1",
     "slevomat/coding-standard": "7.1",
     "suin/phpcs-psr4-sniff": "3.0.0"
   },

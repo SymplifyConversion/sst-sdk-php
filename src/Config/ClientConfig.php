@@ -6,6 +6,8 @@ namespace Symplify\SSTSDK\Config;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
 
@@ -27,6 +29,9 @@ final class ClientConfig
     /** @var int the maximum JSON size in bytes to download and parse */
     private int $maxDownloadBytes;
 
+    /** @var LoggerInterface a logger to collect messages from the SDK */
+    private LoggerInterface $logger;
+
     function __construct(string $websiteID)
     {
         $this->websiteID        = $websiteID;
@@ -34,6 +39,7 @@ final class ClientConfig
         $this->maxDownloadBytes = 1024 * 1024;
         $this->httpClient       = null;
         $this->httpRequests     = null;
+        $this->logger           = new NullLogger();
     }
 
     public function getWebsiteID(): string
@@ -95,6 +101,20 @@ final class ClientConfig
     public function getHttpRequests(): ?RequestFactoryInterface
     {
         return $this->httpRequests;
+    }
+
+    public function withLogger(LoggerInterface $newLogger): ClientConfig
+    {
+        $copy = clone $this;
+
+        $copy->logger = $newLogger;
+
+        return $copy;
+    }
+
+    public function getLogger(): LoggerInterface
+    {
+        return $this->logger;
     }
 
 }

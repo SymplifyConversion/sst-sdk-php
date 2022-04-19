@@ -13,7 +13,7 @@ use Kodus\Cache\FileCache;
 use Symplify\SSTSDK\Client as SymplifyClient;
 use Symplify\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
 
-$websiteID  = getenv('SSTSDK_WEBSITE_ID');
+$websiteID  = "4711";
 $cdnBaseURL = getenv('SSTSDK_CDN_BASEURL');
 
 $cache           = new Psr16CacheStorage(new FileCache('/tmp/sstsdk-examples-httpcache', 500));
@@ -28,7 +28,6 @@ $clientConfig = (new SymplifyClientConfig($websiteID))
     ->withCdnBaseURL($cdnBaseURL)
     ->withHttpClient($httpClient)
     ->withHttpRequests($httpRequests);
-
 
 $sdk = new SymplifyClient($clientConfig);
 

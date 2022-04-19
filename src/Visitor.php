@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Symplify\SSTSDK;
 
+use Psr\Log\LoggerInterface;
 use Symplify\SSTSDK\Cookies\CookieJar;
 
 final class Visitor
@@ -13,10 +14,16 @@ final class Visitor
      * Gets the visitor ID from our cookie, if uninitialized, create one and update the cookie.
      * This keeps visitor IDs in sync with frontend logic.
      *
-     * @param ?Callable $makeID called to generate new random IDs, if null, a v4 UUID will be generated
-     * @returns string the assigned visitor ID
+     * @param CookieJar       $cookies where to get and set visitor ID cookies
+     * @param LoggerInterface $logger used for reporting ID generation errors
+     * @param ?Callable       $makeID called to generate new random IDs, if null, a v4 UUID will be generated
+     * @returns string the assigned visitor ID, empty string if ID generation failed
      */
-    public static function ensureVisitorID(CookieJar $cookies, ?Callable $makeID = null): string
+    public static function ensureVisitorID(
+        CookieJar $cookies,
+        LoggerInterface $logger,
+        ?callable $makeID = null
+    ): string
     {
         $cookieName = 'sg_sst_vid';
         $visitorID  = $cookies->getCookie($cookieName);
@@ -25,8 +32,10 @@ final class Visitor
             try {
                 $visitorID = $makeID ? $makeID() : self::newUUID();
             } catch (\Throwable $t) {
-                // if this happens, we should probably behave as if there was no config
-                error_log('[SSTSDK] ID generation failed: ' . $t->getMessage());
+                $logger->error('ID generation failed', ['exception' => $t->getMessage()]);
+
+                // return to avoid setting the cookie
+                return '';
             }
 
             $cookies->setCookie($cookieName, $visitorID);
