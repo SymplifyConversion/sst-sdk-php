@@ -101,6 +101,15 @@ See more examples of code using the SDK in [./examples](./examples).
 SDK Development
 ===============
 
+## Running CI locally
+
+You can use [act](https://github.com/nektos/act) to execute the GitHub workflow
+locally. It requires Docker.
+
+```shell
+$ act -P ubuntu-latest=shivammathur/node:latest
+```
+
 ## Local Testing
 
 The `examples` directory contains example scripts to show how to use the SDK, but they are also a nice way to test
