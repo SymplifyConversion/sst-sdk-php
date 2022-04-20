@@ -61,11 +61,17 @@ final class Allocation
             $variationID = $variationThreshold[1];
 
             if ($allocation <= $threshold) {
-                return $project->findVariationWithID($variationID);
+                $allocatedVariation = $project->findVariationWithID($variationID);
+
+                break;
             }
         }
 
-        throw new \Exception("[SSTSDK] cannot allocate variation with $allocation in $totalWeight");
+        if (!isset($allocatedVariation)) {
+            throw new \Exception("[SSTSDK] cannot allocate variation with $allocation in $totalWeight");
+        }
+
+        return $allocatedVariation;
     }
 
 }

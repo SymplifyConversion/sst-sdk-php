@@ -59,8 +59,8 @@ final class Client
             throw new \InvalidArgumentException($message);
         }
 
-        if (null !== $httpClient && null === $httpRequests) {
-            throw new \InvalidArgumentException('HTTP client given without request factory');
+        if (is_null($httpClient) !== is_null($httpRequests)) {
+            throw new \InvalidArgumentException('HTTP client and request factory can only be used together');
         }
 
         $this->websiteID        = $clientConfig->getWebsiteID();
@@ -186,6 +186,9 @@ final class Client
         return $config;
     }
 
+    /**
+     * Download the given URL using ext-curl.
+     */
     private function downloadWithCurl(string $url): ?string
     {
         $curl = curl_init();
@@ -215,13 +218,26 @@ final class Client
             return null;
         }
 
-        return $result;
+        // if $result was false we already returned, and since we set CURLOPT_RETURNTRANSFER=true,
+        // $result must be the string response
+        return (string)$result;
     }
 
+    /**
+     * Download the given URL using the injected HTTP client and request factory.
+     *
+     * @psalm-suppress PossiblyNullReference we don't call this unless we checked the HTTP client exists
+     */
     private function downloadWithPsrHttpClient(string $url): ?string
     {
-        $request  = $this->httpRequests->createRequest('GET', $url);
-        $response = $this->httpClient->sendRequest($request);
+        try {
+            $request  = $this->httpRequests->createRequest('GET', $url);
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Throwable $t) {
+            $this->logger->error("could not download latest config", ['exception' => $t]);
+
+            return null;
+        }
 
         if (200 !== $response->getStatusCode()) {
             $this->logger->error("could not download latest config, server status: {$response->getStatusCode()}");
@@ -235,7 +251,7 @@ final class Client
             return null;
         }
 
-        // casting to read all the contents, we have already checked the size above
+        // casting to read all the stream contents, we have already checked the size above
         return (string)$response->getBody();
     }
 

@@ -24,7 +24,8 @@
     "phpstan/phpstan": "1.5.3",
     "psr/cache": "1.0.1",
     "slevomat/coding-standard": "7.1",
-    "suin/phpcs-psr4-sniff": "3.0.0"
+    "suin/phpcs-psr4-sniff": "3.0.0",
+    "vimeo/psalm": "4.22.0"
   },
   "autoload": {
     "psr-4": {
