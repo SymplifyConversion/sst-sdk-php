@@ -15,11 +15,17 @@ final class Allocation
      * The allocation is the same given the same project ID, visitor ID, variation IDs, variation order,
      * and variation weights, but it appears random given randomly distributed visitor IDs.
      *
+     * If the visitor ID is empty, always returns the original variation.
+     *
      * @return VariationConfig the allocated variation
      * @throws \Exception if the variation weight configuration in $project is invalid
      */
     public static function findVariationForVisitor(ProjectConfig $project, string $visitorID): VariationConfig
     {
+        if ('' === $visitorID) {
+            return $project->findVariationWithName('Original') ?: self::lookupVariationAt($project, 1);
+        }
+
         $allocation = self::getAllocation($project, $visitorID);
 
         return self::lookupVariationAt($project, $allocation);

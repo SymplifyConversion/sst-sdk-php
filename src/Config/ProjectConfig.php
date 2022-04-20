@@ -54,4 +54,15 @@ final class ProjectConfig
         return null;
     }
 
+    function findVariationWithName(string $variationName): ?VariationConfig
+    {
+        foreach ($this->variations as $variation) {
+            if ($variation->name === $variationName) {
+                return $variation;
+            }
+        }
+
+        return null;
+    }
+
 }

@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Symplify\SSTSDK\Allocation;
 use Symplify\SSTSDK\Config\ProjectConfig;
 use Symplify\SSTSDK\Config\SymplifyConfig;
+use Symplify\SSTSDK\Config\VariationConfig;
 use function PHPUnit\Framework\assertEquals;
 
 const ALLOCATION_TEST_PROJECT_JSON = '
@@ -61,8 +62,26 @@ final class AllocationTest extends TestCase
 
     public function testAllocateEmptyVisitorID(): void
     {
-        $variation = Allocation::findVariationForVisitor($this->testProject, "");
-        assertEquals(42, $variation->id);
+        $originalID = random_int(1, 1000);
+        $variationID = random_int(1001, 2000);
+        $testProject = new ProjectConfig(
+            10000,
+            'test project',
+            [
+                new VariationConfig(
+                    $originalID,
+                    'Original',
+                    1,
+                ),
+                new VariationConfig(
+                    $variationID,
+                    'Variation',
+                    1000,
+                ),
+            ]
+        );
+        $variation = Allocation::findVariationForVisitor($testProject, "");
+        assertEquals($originalID, $variation->id);
     }
 
     public function testAllocateLongVisitorID(): void
