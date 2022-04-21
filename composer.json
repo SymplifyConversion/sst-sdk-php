@@ -1,6 +1,6 @@
 {
   "name": "symplify/sst-sdk-php",
-  "description": "Server-Side Testing SDK",
+  "description": "SDK for Symplify Server-Side Testing",
   "type": "library",
   "license": "MIT",
   "authors": [
