@@ -101,6 +101,21 @@ See more examples of code using the SDK in [./examples](./examples).
 SDK Development
 ===============
 
+## Setup
+
+1. Clone this repository
+2. Install the pre-commit hook to avoid bad commits
+3. Run composer install
+4. Run the test suite to verify things are working
+
+```shell
+$ git clone git@github.com:SymplifyConversion/sst-sdk-php.git
+$ cd sst-sdk-php
+$ cp ci/pre-commit.sh .git/hooks/pre-commit
+$ composer install
+$ ./ci/test.sh
+```
+
 ## Running CI locally
 
 You can use [act](https://github.com/nektos/act) to execute the GitHub workflow
