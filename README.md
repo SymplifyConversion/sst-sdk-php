@@ -134,6 +134,9 @@ $ ./ci/test.sh
 
 ## Checklist for Releases
 
+We practice [trunk based development](https://trunkbaseddevelopment.com) and
+`main` is the branch we release from.
+
 1. pull latest `main`
 2. review "Unreleased" in [the changelog](./CHANGELOG.md) to decide if
    the release is a major, minor, or patch release `vX.Y.Z`
