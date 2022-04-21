@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Symplify\SSTSDK\Allocation;
-use Symplify\SSTSDK\Config\ProjectConfig;
-use Symplify\SSTSDK\Config\SymplifyConfig;
-use Symplify\SSTSDK\Config\VariationConfig;
+use SymplifyConversion\SSTSDK\Allocation;
+use SymplifyConversion\SSTSDK\Config\ProjectConfig;
+use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
+use SymplifyConversion\SSTSDK\Config\VariationConfig;
 use function PHPUnit\Framework\assertEquals;
 
 const ALLOCATION_TEST_PROJECT_JSON = '

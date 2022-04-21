@@ -28,7 +28,7 @@ Using ext-curl for HTTP requests:
 
 ```php
 [...]
-use Symplify\SSTSDK\Client as SymplifyClient;
+use SymplifyConversion\SSTSDK\Client as SymplifyClient;
 [...]
 
 // 1. configure the SDK and create an instance
@@ -72,8 +72,8 @@ use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
 use Kevinrob\GuzzleCache\Storage\Psr16CacheStorage;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kodus\Cache\FileCache;
-use Symplify\SSTSDK\Client as SymplifyClient;
-use Symplify\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
+use SymplifyConversion\SSTSDK\Client as SymplifyClient;
+use SymplifyConversion\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
 [...]
 
 // 1. configure the SDK and create an instance
@@ -100,6 +100,21 @@ See more examples of code using the SDK in [./examples](./examples).
 
 SDK Development
 ===============
+
+## Setup
+
+1. Clone this repository
+2. Install the pre-commit hook to avoid bad commits
+3. Run composer install
+4. Run the test suite to verify things are working
+
+```shell
+$ git clone git@github.com:SymplifyConversion/sst-sdk-php.git
+$ cd sst-sdk-php
+$ cp ci/pre-commit.sh .git/hooks/pre-commit
+$ composer install
+$ ./ci/test.sh
+```
 
 ## Running CI locally
 

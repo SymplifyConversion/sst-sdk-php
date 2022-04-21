@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Symplify\SSTSDK\Client;
-use Symplify\SSTSDK\Config\ClientConfig;
+use SymplifyConversion\SSTSDK\Client;
+use SymplifyConversion\SSTSDK\Config\ClientConfig;
 use function PHPUnit\Framework\assertEquals;
 
 final class ClientTest extends TestCase

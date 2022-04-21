@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c8f6f0ff6d1ccd5b90d86773fa8b04a",
+    "content-hash": "d464e28389aa061796fc694e407a2319",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -841,20 +841,20 @@
             "time": "2022-01-02T09:53:40+00:00"
         },
         {
-            "name": "symplify/sst-sdk-php",
+            "name": "symplify-conversion/sst-sdk-php",
             "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "434cecee229d76b47dca670c8951d34daa562459"
+                "reference": "d7e169b6e2e0e37ade648a6ce093365e4ab07690"
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "php": ">=7.4",
-                "psr/http-client": "1.0.1",
-                "psr/http-factory": "1.0.1",
-                "psr/log": "1.1.4"
+                "psr/http-client": "^1.0.1",
+                "psr/http-factory": "^1.0.1",
+                "psr/log": "^1.1.4"
             },
             "require-dev": {
                 "cache/array-adapter": "1.2.0",
@@ -864,12 +864,13 @@
                 "phpunit/phpunit": "9.5.19",
                 "psr/cache": "1.0.1",
                 "slevomat/coding-standard": "7.1",
-                "suin/phpcs-psr4-sniff": "3.0.0"
+                "suin/phpcs-psr4-sniff": "3.0.0",
+                "vimeo/psalm": "4.22.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Symplify\\SSTSDK\\": "src/"
+                    "SymplifyConversion\\SSTSDK\\": "src/"
                 }
             },
             "scripts": {
@@ -877,12 +878,15 @@
                     "phpcs src"
                 ]
             },
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
                     "name": "Fabian Bergström"
                 }
             ],
-            "description": "Server-Side Testing SDK",
+            "description": "SDK for Symplify Conversion Server-Side Testing",
             "transport-options": {
                 "relative": true
             }
@@ -892,7 +896,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "symplify/sst-sdk-php": 20
+        "symplify-conversion/sst-sdk-php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

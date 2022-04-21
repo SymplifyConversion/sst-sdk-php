@@ -2,8 +2,8 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Symplify\SSTSDK\Client as SymplifyClient;
-use Symplify\SSTSDK\Config\ClientConfig;
+use SymplifyConversion\SSTSDK\Client as SymplifyClient;
+use SymplifyConversion\SSTSDK\Config\ClientConfig;
 
 $websiteID  = "4711";
 $cdnBaseURL = getenv('SSTSDK_CDN_BASEURL');

@@ -2,9 +2,9 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Symplify\SSTSDK\Client as SymplifyClient;
-use Symplify\SSTSDK\Config\ClientConfig;
-use Symplify\SSTSDK\ErrorLogLogger;
+use SymplifyConversion\SSTSDK\Client as SymplifyClient;
+use SymplifyConversion\SSTSDK\Config\ClientConfig;
+use SymplifyConversion\SSTSDK\ErrorLogLogger;
 
 $badJSON        = filter_input(INPUT_GET, 'badJSON', FILTER_VALIDATE_BOOLEAN);
 $missingProject = filter_input(INPUT_GET, 'missingProject', FILTER_VALIDATE_BOOLEAN);

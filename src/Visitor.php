@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Symplify\SSTSDK;
+namespace SymplifyConversion\SSTSDK;
 
 use Psr\Log\LoggerInterface;
-use Symplify\SSTSDK\Cookies\CookieJar;
+use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 
 final class Visitor
 {

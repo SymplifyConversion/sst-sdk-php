@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use Symplify\SSTSDK\Cookies\CookieJar;
-use Symplify\SSTSDK\Visitor;
+use SymplifyConversion\SSTSDK\Cookies\CookieJar;
+use SymplifyConversion\SSTSDK\Visitor;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertMatchesRegularExpression;
 use function PHPUnit\Framework\assertNotEquals;

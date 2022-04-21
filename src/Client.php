@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Symplify\SSTSDK;
+namespace SymplifyConversion\SSTSDK;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Symplify\SSTSDK\Config\ClientConfig;
-use Symplify\SSTSDK\Config\SymplifyConfig;
-use Symplify\SSTSDK\Cookies\DefaultCookieJar;
+use SymplifyConversion\SSTSDK\Config\ClientConfig;
+use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
+use SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar;
 
 /**
  * A client SDK for Symplify Server-Side Testing.

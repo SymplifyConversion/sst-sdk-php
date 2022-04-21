@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Symplify\SSTSDK;
+namespace SymplifyConversion\SSTSDK;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;

@@ -10,8 +10,8 @@ use Kevinrob\GuzzleCache\Storage\Psr16CacheStorage;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kodus\Cache\FileCache;
 
-use Symplify\SSTSDK\Client as SymplifyClient;
-use Symplify\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
+use SymplifyConversion\SSTSDK\Client as SymplifyClient;
+use SymplifyConversion\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
 
 $websiteID  = "4711";
 $cdnBaseURL = getenv('SSTSDK_CDN_BASEURL');
