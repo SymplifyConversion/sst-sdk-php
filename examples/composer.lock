@@ -846,7 +846,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "d7e169b6e2e0e37ade648a6ce093365e4ab07690"
+                "reference": "26a349b70f6b164957f67222e608076b478f7a7c"
             },
             "require": {
                 "ext-curl": "*",
@@ -883,7 +883,13 @@
             ],
             "authors": [
                 {
-                    "name": "Fabian Bergström"
+                    "name": "Symplify Technologies",
+                    "email": "conversion@symplify.com",
+                    "homepage": "https://symplify.com/conversion/"
+                },
+                {
+                    "name": "Fabian Bergström",
+                    "role": "developer"
                 }
             ],
             "description": "SDK for Symplify Conversion Server-Side Testing",
