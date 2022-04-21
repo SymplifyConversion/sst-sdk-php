@@ -10,6 +10,12 @@ the purpose of the caching is to keep the hot path fast.
 Instead, we recommend you configure the HTTP client (can be injected to the SDK)
 to do HTTP caching. See [Usage](#Usage) below.
 
+Changes
+=======
+
+See [CHANGELOG.md](./CHANGELOG.md)
+
+
 Requirements
 ============
 
@@ -116,6 +122,29 @@ $ composer install
 $ ./ci/test.sh
 ```
 
+## Checklist for Changes
+
+1. pull latest `main`
+2. create a new branch for your changes
+3. write code and tests
+4. add the change to [the changelog](./CHANGELOG.md)
+5. get the pull request reviewed
+6. squash merge the changes
+7. delete the new branch
+
+## Checklist for Releases
+
+1. pull latest `main`
+2. review "Unreleased" in [the changelog](./CHANGELOG.md) to decide if
+   the release is a major, minor, or patch release `vX.Y.Z`
+3. create a new branch `release/vX.Y.Z` matching the version name
+4. update links and headings in [the changelog](./CHANGELOG.md) to reflect the new version
+5. get the pull request reviewed
+6. squash merge the changes
+7. delete the new branch
+8. tag the merge commit in `main`: `vX.Y.Z`
+9. [create a matching GitHub release](https://github.com/SymplifyConversion/sst-sdk-php/releases/new)
+ 
 ## Running CI locally
 
 You can use [act](https://github.com/nektos/act) to execute the GitHub workflow
