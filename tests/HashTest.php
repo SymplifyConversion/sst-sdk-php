@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Symplify\SSTSDK\Hash;
+use SymplifyConversion\SSTSDK\Hash;
 use function PHPUnit\Framework\assertEquals;
 
 // these hashing tests are the same in all SDK implementations

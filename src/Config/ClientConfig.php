@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Symplify\SSTSDK\Config;
+namespace SymplifyConversion\SSTSDK\Config;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;

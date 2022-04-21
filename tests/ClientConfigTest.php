@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Symplify\SSTSDK\Config\ClientConfig;
+use SymplifyConversion\SSTSDK\Config\ClientConfig;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertNull;
 

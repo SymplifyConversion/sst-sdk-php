@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Symplify\SSTSDK\Cookies;
+namespace SymplifyConversion\SSTSDK\Cookies;
 
 final class DefaultCookieJar implements CookieJar
 {

@@ -28,7 +28,7 @@ Using ext-curl for HTTP requests:
 
 ```php
 [...]
-use Symplify\SSTSDK\Client as SymplifyClient;
+use SymplifyConversion\SSTSDK\Client as SymplifyClient;
 [...]
 
 // 1. configure the SDK and create an instance
@@ -72,8 +72,8 @@ use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
 use Kevinrob\GuzzleCache\Storage\Psr16CacheStorage;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kodus\Cache\FileCache;
-use Symplify\SSTSDK\Client as SymplifyClient;
-use Symplify\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
+use SymplifyConversion\SSTSDK\Client as SymplifyClient;
+use SymplifyConversion\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
 [...]
 
 // 1. configure the SDK and create an instance

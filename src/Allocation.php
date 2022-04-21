@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Symplify\SSTSDK;
+namespace SymplifyConversion\SSTSDK;
 
-use Symplify\SSTSDK\Config\ProjectConfig;
-use Symplify\SSTSDK\Config\VariationConfig;
+use SymplifyConversion\SSTSDK\Config\ProjectConfig;
+use SymplifyConversion\SSTSDK\Config\VariationConfig;
 
 final class Allocation
 {

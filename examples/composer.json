@@ -1,5 +1,5 @@
 {
-  "name": "symplify/sst-sdk-php-examples",
+  "name": "symplify-conversion/sst-sdk-php-examples",
   "license": "MIT",
   "authors": [
     {
@@ -12,7 +12,7 @@
     "guzzlehttp/guzzle": "7.4.2",
     "kevinrob/guzzle-cache-middleware":"v4.0.1.",
     "kodus/file-cache": "1.1.1",
-    "symplify/sst-sdk-php": "dev-main"
+    "symplify-conversion/sst-sdk-php": "dev-main"
   },
   "repositories": [
     {
