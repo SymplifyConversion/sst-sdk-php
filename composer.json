@@ -5,7 +5,13 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Fabian Bergström"
+      "name": "Symplify Technologies",
+      "email": "conversion@symplify.com",
+      "homepage": "https://symplify.com/conversion/"
+    },
+    {
+      "name": "Fabian Bergström",
+      "role": "developer"
     }
   ],
   "require": {
