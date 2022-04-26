@@ -10,23 +10,45 @@ use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 final class Visitor
 {
 
+    private const JSON_COOKIE_NAME = 'sg_cookies';
+    private const JSON_COOKIE_VERSION_KEY = '_g';
+    private const JSON_COOKIE_VISITOR_ID_KEY = 'visid';
+    private const SUPPORTED_JSON_COOKIE_VERSION = 1;
+
     /**
      * Gets the visitor ID from our cookie, if uninitialized, create one and update the cookie.
      * This keeps visitor IDs in sync with frontend logic.
      *
      * @param CookieJar       $cookies where to get and set visitor ID cookies
      * @param LoggerInterface $logger used for reporting ID generation errors
+     * @param string          $websiteID used for managing the visitor cookie
      * @param ?Callable       $makeID called to generate new random IDs, if null, a v4 UUID will be generated
      * @returns string the assigned visitor ID, empty string if ID generation failed
      */
     public static function ensureVisitorID(
         CookieJar $cookies,
         LoggerInterface $logger,
+        string $websiteID,
         ?callable $makeID = null
     ): string
     {
-        $cookieName = 'sg_sst_vid';
-        $visitorID  = $cookies->getCookie($cookieName);
+        $sgCookies = json_decode($cookies->getCookie(self::JSON_COOKIE_NAME), true) ?? [
+                self::JSON_COOKIE_VERSION_KEY => self::SUPPORTED_JSON_COOKIE_VERSION,
+            ];
+
+        $cookieGeneration = $sgCookies[self::JSON_COOKIE_VERSION_KEY] ?? null;
+
+        if (self::SUPPORTED_JSON_COOKIE_VERSION !== $cookieGeneration) {
+            $logger->error(sprintf(
+                "ID detection failed: unknown generation '%d' in cookie '%s'",
+                $cookieGeneration ?? 'null',
+                self::JSON_COOKIE_NAME
+            ));
+
+            return '';
+        }
+
+        $visitorID = $sgCookies[$websiteID][self::JSON_COOKIE_VISITOR_ID_KEY] ?? null;
 
         if (!$visitorID) {
             try {
@@ -34,11 +56,14 @@ final class Visitor
             } catch (\Throwable $t) {
                 $logger->error('ID generation failed', ['exception' => $t->getMessage()]);
 
-                // return to avoid setting the cookie
+                // return early to avoid setting the cookie
                 return '';
             }
 
-            $cookies->setCookie($cookieName, $visitorID);
+            $sgCookies[$websiteID][self::JSON_COOKIE_VISITOR_ID_KEY] = $visitorID;
+
+            $cookieJSON = json_encode($sgCookies);
+            $cookies->setCookie(self::JSON_COOKIE_NAME, $cookieJSON);
         }
 
         return $visitorID;

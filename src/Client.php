@@ -129,7 +129,7 @@ final class Client
                 return null;
             }
 
-            $visitorID      = Visitor::ensureVisitorID(new DefaultCookieJar(), $this->logger);
+            $visitorID      = Visitor::ensureVisitorID(new DefaultCookieJar(), $this->logger, $this->websiteID);
             $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
 
             return $foundVariation->name;
