@@ -2,3 +2,4 @@
 vendor/
 
 examples/.cache-*
+/.phpunit.result.cache

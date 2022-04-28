@@ -79,7 +79,11 @@
     <rule ref="SlevomatCodingStandard.Functions.ArrowFunctionDeclaration"/>
     <rule ref="SlevomatCodingStandard.Functions.DisallowEmptyFunction"/>
     <rule ref="SlevomatCodingStandard.Functions.DisallowNamedArguments"/>
-    <rule ref="SlevomatCodingStandard.Functions.FunctionLength"/>
+    <rule ref="SlevomatCodingStandard.Functions.FunctionLength">
+        <properties>
+            <property name="maxLinesLength" value="30"/>
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.Functions.RequireMultiLineCall"/>
     <rule ref="SlevomatCodingStandard.Functions.RequireSingleLineCall"/>
     <rule ref="SlevomatCodingStandard.Functions.StaticClosure"/>
