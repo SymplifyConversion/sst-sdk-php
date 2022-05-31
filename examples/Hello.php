@@ -12,9 +12,12 @@ $clientConfig = (new ClientConfig($websiteID))->withCdnBaseURL($cdnBaseURL);
 $sdk          = new SymplifyClient($clientConfig);
 
 $sdk->loadConfig();
+?>
 
-foreach ($sdk->listProjects() as $projectName) {
-    echo " * $projectName" . PHP_EOL;
-    $variationName = $sdk->findVariation($projectName);
-    echo "   - assigned variation: " . $variationName . PHP_EOL;
-}
+<p>Project allocations:</p>
+<dl>
+    <?php foreach ($sdk->listProjects() as $projectName): // phpcs:ignore ?>
+    <dt>project <?= $projectName ?></dt>
+    <dd>variation <?= $sdk->findVariation($projectName) ?></dd>
+    <?php endforeach ?>
+</dl>
