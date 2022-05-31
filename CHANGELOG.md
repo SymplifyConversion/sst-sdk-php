@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Bump guzzle dependency in example code (CVE-2022-29248)
 - Update package authors with contact info
 
 ## [0.1.0] - 2022-04-21
