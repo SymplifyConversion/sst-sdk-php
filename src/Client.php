@@ -9,6 +9,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use SymplifyConversion\SSTSDK\Config\ClientConfig;
 use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
+use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 use SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar;
 
 /**
@@ -112,8 +113,12 @@ final class Client
      *         null if there is no matching project or no visitor ID was found.
      * @throws \Exception not yet implemented
      */
-    public function findVariation(string $projectName): ?string
+    public function findVariation(string $projectName, ?CookieJar $cookies = null): ?string
     {
+        if (null === $cookies) {
+            $cookies = new DefaultCookieJar();
+        }
+
         try {
             if (!$this->config) {
                 $this->logger->error('findVariation called before config is available');
@@ -129,7 +134,7 @@ final class Client
                 return null;
             }
 
-            $visitorID      = Visitor::ensureVisitorID(new DefaultCookieJar(), $this->logger, $this->websiteID);
+            $visitorID      = Visitor::ensureVisitorID($cookies, $this->logger, $this->websiteID);
             $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
 
             return $foundVariation->name;
