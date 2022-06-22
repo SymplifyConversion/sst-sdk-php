@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use SymplifyConversion\SSTSDK\SymplifyCookie;
+use SymplifyConversion\SSTSDK\Cookies\SymplifyCookie;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertMatchesRegularExpression;
 use function PHPUnit\Framework\assertNotEquals;

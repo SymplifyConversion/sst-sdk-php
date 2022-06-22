@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SymplifyConversion\SSTSDK;
+namespace SymplifyConversion\SSTSDK\Cookies;
 
 use Psr\Log\LoggerInterface;
-use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 
 /**
  * SymplifyCookie manages visitor and allocation information in our JSON cookie.

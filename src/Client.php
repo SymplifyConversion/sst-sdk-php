@@ -11,6 +11,7 @@ use SymplifyConversion\SSTSDK\Config\ClientConfig;
 use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
 use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 use SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar;
+use SymplifyConversion\SSTSDK\Cookies\SymplifyCookie;
 
 /**
  * A client SDK for Symplify Server-Side Testing.
