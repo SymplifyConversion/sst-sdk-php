@@ -14,10 +14,13 @@ final class VariationConfig
     /** @var int relative variation weight */
     public int $weight;
 
-    function __construct(int $id, string $name, int $weight)
+    public int $state;
+
+    function __construct(int $id, string $name, int $state, int $weight)
     {
         $this->id     = $id;
         $this->name   = $name;
+        $this->state  = $state;
         $this->weight = $weight;
     }
 
@@ -30,8 +33,13 @@ final class VariationConfig
         $id     = $data['id'] ?? 0;
         $name   = $data['name'] ?? '';
         $weight = $data['weight'] ?? 1;
+        $state  = ProjectState::PAUSED;
 
-        return new VariationConfig($id, $name, (int)$weight);
+        if ('active' === ($data['state'] ?? null)) {
+            $state  = ProjectState::ACTIVE;
+        }
+
+        return new VariationConfig($id, $name, $state, (int)$weight);
     }
 
 }
