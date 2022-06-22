@@ -110,14 +110,15 @@ SDK Development
 ## Setup
 
 1. Clone this repository
-2. Install the pre-commit hook to avoid bad commits
+2. Install git hooks
 3. Run composer install
 4. Run the test suite to verify things are working
 
 ```shell
 $ git clone git@github.com:SymplifyConversion/sst-sdk-php.git
 $ cd sst-sdk-php
-$ cp ci/pre-commit.sh .git/hooks/pre-commit
+$ cp ci/hook-pre-push.sh .git/hooks/pre-push
+$ cp ci/hook-commit-msg.sh .git/hooks/commit-msg
 $ composer install
 $ ./ci/test.sh
 ```
