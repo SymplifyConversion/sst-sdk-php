@@ -9,6 +9,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use SymplifyConversion\SSTSDK\Config\ClientConfig;
 use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
+use SymplifyConversion\SSTSDK\Cookies\AllocationStatus;
 use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 use SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar;
 use SymplifyConversion\SSTSDK\Cookies\SymplifyCookie;
@@ -144,7 +145,28 @@ final class Client
                 return null;
             }
 
-            // TODO(Fabian) reuse variation allocation
+            // check if we already have allocation info from before in the cookie
+            switch ($sgCookies->getAllocationStatus($foundProject)) {
+                case AllocationStatus::NULL_ALLOCATION:
+                    // we have null from before
+                    return null;
+
+                case AllocationStatus::VARIATION_ALLOCATION:
+                    // we should have a variation from before already
+                    $allocation = $sgCookies->getAllocation($foundProject);
+
+                    if (is_null($allocation)) {
+                        $this->logger->error("bad cookie: variation allocation is not right");
+
+                        return null;
+                    }
+
+                    return $allocation->name;
+
+                case AllocationStatus::NONE:
+                default:
+                    // we need to find a variation, continue
+            }
 
             $visitorID = $sgCookies->getVisitorID();
 

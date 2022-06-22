@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace SymplifyConversion\SSTSDK\Cookies;
 
 use Psr\Log\LoggerInterface;
+use SymplifyConversion\SSTSDK\Config\ProjectConfig;
+use SymplifyConversion\SSTSDK\Config\VariationConfig;
 
 /**
  * SymplifyCookie manages visitor and allocation information in our JSON cookie.
@@ -90,15 +92,49 @@ final class SymplifyCookie
      */
     public function getVisitorID(?callable $idGenerator = null): ?string
     {
-        $id = $this->underlying[$this->websiteID][self::JSON_COOKIE_VISITOR_ID_KEY] ?? null;
+        $id = $this->getValue(self::JSON_COOKIE_VISITOR_ID_KEY);
 
         if (is_null($id)) {
             $id = is_null($idGenerator) ? self::newUUID() : $idGenerator();
 
-            $this->underlying[$this->websiteID][self::JSON_COOKIE_VISITOR_ID_KEY] = $id;
+            $this->setValue(self::JSON_COOKIE_VISITOR_ID_KEY, $id);
         }
 
         return $id;
+    }
+
+    public function getAllocationStatus(ProjectConfig $project): int
+    {
+        if (-1 === $this->getValue("" . $project->id . "_ch")) {
+            return AllocationStatus::NULL_ALLOCATION;
+        }
+
+        if ('array' === gettype($this->getValue("" . $project->id))) {
+            return AllocationStatus::VARIATION_ALLOCATION;
+        }
+
+        return AllocationStatus::NONE;
+    }
+
+    public function getAllocation(ProjectConfig $project): ?VariationConfig
+    {
+        $allocated = $this->getValue("" . $project->id);
+
+        if ('array' === gettype($allocated)) {
+            return $project->findVariationWithID($allocated[0]);
+        }
+
+        return null;
+    }
+
+    private function getValue(string $key)
+    {
+        return $this->underlying[$this->websiteID][$key] ?? null;
+    }
+
+    private function setValue(string $key, $newValue): void
+    {
+        $this->underlying[$this->websiteID][$key] = $newValue;
     }
 
     /**
