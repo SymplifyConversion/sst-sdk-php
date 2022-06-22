@@ -111,7 +111,6 @@ final class Client
      *
      * @return string|null the name of the current visitor's assigned variation,
      *         null if there is no matching project or no visitor ID was found.
-     * @throws \Exception not yet implemented
      */
     public function findVariation(string $projectName, ?CookieJar $cookies = null): ?string
     {
@@ -137,7 +136,7 @@ final class Client
             $visitorID      = Visitor::ensureVisitorID($cookies, $this->logger, $this->websiteID);
             $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
 
-            return $foundVariation->name;
+            return is_null($foundVariation) ? null : $foundVariation->name;
         } catch (\Throwable $t) {
             $this->logger->error('findVariation failed', ['exception' => $t]);
 

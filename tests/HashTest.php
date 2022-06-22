@@ -40,6 +40,11 @@ final class HashTest extends TestCase
             Hash::hash_in_window("cc615f71-1ab8-4322-b7d7-e10294a8d483", 3),
             "hashInWindow is distributed 3",
         );
+        assertEquals(
+            57,
+            Hash::hash_in_window("b7850777-f581-4f66-ad3e-4e54963661df", 100),
+            "hashInWindow is compatible",
+        );
     }
 
 }
