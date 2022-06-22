@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymplifyConversion\SSTSDK\Config;
 
 final class ProjectState

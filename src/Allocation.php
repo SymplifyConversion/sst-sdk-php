@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace SymplifyConversion\SSTSDK;
 
 use SymplifyConversion\SSTSDK\Config\ProjectConfig;
-use SymplifyConversion\SSTSDK\Config\VariationConfig;
 use SymplifyConversion\SSTSDK\Config\ProjectState;
+use SymplifyConversion\SSTSDK\Config\VariationConfig;
 
 final class Allocation
 {
@@ -41,4 +41,5 @@ final class Allocation
 
         return null;
     }
+
 }
