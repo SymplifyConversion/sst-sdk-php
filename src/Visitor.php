@@ -32,9 +32,22 @@ final class Visitor
         ?callable $makeID = null
     ): string
     {
-        $sgCookies = json_decode($cookies->getCookie(self::JSON_COOKIE_NAME), true) ?? [
+        $cookieJSON = $cookies->getCookie(self::JSON_COOKIE_NAME);
+
+        if (is_null($cookieJSON)) {
+            $sgCookies = [
                 self::JSON_COOKIE_VERSION_KEY => self::SUPPORTED_JSON_COOKIE_VERSION,
             ];
+        } else {
+            $sgCookies = json_decode($cookieJSON, true);
+
+            if (is_null($sgCookies)) {
+                $info = json_last_error_msg();
+                $logger->error("cannot parse JSON cookie: $info");
+
+                return '';
+            }
+        }
 
         $cookieGeneration = $sgCookies[self::JSON_COOKIE_VERSION_KEY] ?? null;
 
