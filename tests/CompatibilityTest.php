@@ -43,6 +43,7 @@ final class CompatibilityTest extends TestCase
      * @param array<string, string> $cookies
      * @param array<mixed>          $expect_sg_cookie_properties_match
      */
+    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     public function testCompatibilityCase(
         ?string $skip,
         string $sdk_config,
@@ -86,5 +87,24 @@ final class CompatibilityTest extends TestCase
         } else {
             self::assertMatchesRegularExpression("/$expect_variation_match/", $gotVariation);
         }
+
+        $cookiesAfter = json_decode($cookieJar->getCookie('sg_cookies') ?? '{}', true);
+
+        foreach ($expect_sg_cookie_properties_match as $propertyKey => $expectProperty) {
+            $parts = preg_split("_/_", $propertyKey);
+            $prop  = $cookiesAfter;
+
+            do {
+                $key = array_shift($parts);
+                $prop = $prop[$key] ?? (0 < count($parts) ? [] : null);
+            } while (0 < count($parts));
+
+            if ("string" === gettype($expectProperty)) {
+                self::assertMatchesRegularExpression("_${expectProperty}_", $prop);
+            } else {
+                self::assertEquals($expectProperty, $prop);
+            }
+        }
     }
+
 }
