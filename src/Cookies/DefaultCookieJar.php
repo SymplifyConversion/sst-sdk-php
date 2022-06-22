@@ -10,10 +10,10 @@ final class DefaultCookieJar implements CookieJar
     /**
      * Get the HTTP cookie from the current request with the given name.
      */
-    public function getCookie(string $name): string
+    public function getCookie(string $name): ?string
     {
         // phpcs:ignore
-        return $_COOKIE[$name] ?? '';
+        return $_COOKIE[$name];
     }
 
     /**

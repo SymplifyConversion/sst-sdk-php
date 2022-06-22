@@ -76,7 +76,7 @@ final class CompatibilityTest extends TestCase
         $cookieJar = new TestCookieJar();
 
         foreach ($cookies as $cookieName => $cookieValue) {
-            $cookieJar->setCookie($cookieName, $cookieValue);
+            $cookieJar->setCookie($cookieName, urldecode($cookieValue));
         }
 
         $gotVariation = $sdk->findVariation($test_project_name, $cookieJar);
