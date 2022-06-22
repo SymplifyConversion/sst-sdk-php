@@ -133,10 +133,38 @@ final class Client
                 return null;
             }
 
-            $visitorID      = Visitor::ensureVisitorID($cookies, $this->logger, $this->websiteID);
+            // TODO(Fabian) abort on inactive project
+
+            $sgCookies = SymplifyCookie::fromCookieJar($this->websiteID, $cookies, $this->logger);
+
+            if (is_null($sgCookies)) {
+                $this->logger->error("unable to get JSON cookie, aborting");
+
+                return null;
+            }
+
+            // TODO(Fabian) reuse variation allocation
+
+            $visitorID = $sgCookies->getVisitorID();
+
+            if (is_null($visitorID)) {
+                $this->logger->error('no visitor ID assigned, aborting');
+
+                return null;
+            }
+
             $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
 
-            return is_null($foundVariation) ? null : $foundVariation->name;
+            if (is_null($foundVariation)) {
+                // TODO(Fabian) persist null allocation
+                return null;
+            }
+
+            // TODO(Fabian) persist variation allocation
+
+            $sgCookies->saveTo($cookies);
+
+            return $foundVariation->name;
         } catch (\Throwable $t) {
             $this->logger->error('findVariation failed', ['exception' => $t]);
 

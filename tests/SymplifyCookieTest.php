@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use SymplifyConversion\SSTSDK\Visitor;
+use SymplifyConversion\SSTSDK\SymplifyCookie;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertMatchesRegularExpression;
 use function PHPUnit\Framework\assertNotEquals;
 
 include_once "TestCookieJar.php";
 
-final class VisitorTest extends TestCase
+final class SymplifyCookieTest extends TestCase
 {
 
     private const JSON_COOKIE_NAME = 'sg_cookies';
@@ -23,8 +23,11 @@ final class VisitorTest extends TestCase
         $cookies       = new TestCookieJar();
         $testWebsiteID = '4711';
 
-        $returnedID = Visitor::ensureVisitorID($cookies, $logger, $testWebsiteID, generateConstantID('goober'));
-        $cookieObj  = json_decode($cookies->getCookie(self::JSON_COOKIE_NAME), true);
+        $cookie     = SymplifyCookie::fromCookieJar($testWebsiteID, $cookies, $logger);
+        $returnedID = $cookie->getVisitorID(generateConstantID('goober'));
+        $cookie->saveTo($cookies);
+
+        $cookieObj = json_decode($cookies->getCookie(self::JSON_COOKIE_NAME), true);
 
         assertEquals('goober', $returnedID);
         assertEquals('goober', $cookieObj[$testWebsiteID][self::VISITOR_ID_COOKIE_KEY]);
@@ -40,7 +43,9 @@ final class VisitorTest extends TestCase
         $cookieJSON = urldecode($rawCookie); // PHP does this automatically for $_COOKIE
         $cookies->setCookie(self::JSON_COOKIE_NAME, $cookieJSON);
 
-        $returnedID = Visitor::ensureVisitorID($cookies, $logger, '10001', generateConstantID('goober'));
+        $cookie     = SymplifyCookie::fromCookieJar('10001', $cookies, $logger);
+        $returnedID = $cookie->getVisitorID(generateConstantID('goober'));
+
         assertEquals('78ac2972-de5f-4262-bfdb-7296eb132a94', $returnedID);
     }
 
@@ -54,15 +59,18 @@ final class VisitorTest extends TestCase
         $cookieJSON = urldecode($rawCookie); // PHP does this automatically for $_COOKIE
         $cookies->setCookie(self::JSON_COOKIE_NAME, $cookieJSON);
 
-        $returnedID = Visitor::ensureVisitorID($cookies, $logger, '42', generateConstantID('goober'));
-        assertEquals('', $returnedID);
+        $cookie = SymplifyCookie::fromCookieJar('42', $cookies, $logger);
+
+        self::assertNull($cookie);
     }
 
     public function testGenerateUUID(): void
     {
-        $logger      = new NullLogger();
-        $returnedIDA = Visitor::ensureVisitorID(new TestCookieJar(), $logger, "doesn't matter");
-        $returnedIDB = Visitor::ensureVisitorID(new TestCookieJar(), $logger, "don't care");
+        $logger = new NullLogger();
+
+        $returnedIDA = SymplifyCookie::fromCookieJar("doesn't matter", new TestCookieJar(), $logger)->getVisitorID();
+        $returnedIDB = SymplifyCookie::fromCookieJar("don't care", new TestCookieJar(), $logger)->getVisitorID();
+
         $uuidPattern = '/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/';
         assertMatchesRegularExpression($uuidPattern, $returnedIDA);
         assertMatchesRegularExpression($uuidPattern, $returnedIDB);
