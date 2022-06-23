@@ -33,11 +33,7 @@ final class VariationConfig
         $id     = $data['id'] ?? 0;
         $name   = $data['name'] ?? '';
         $weight = $data['weight'] ?? 1;
-        $state  = ProjectState::PAUSED;
-
-        if ('active' === ($data['state'] ?? null)) {
-            $state  = ProjectState::ACTIVE;
-        }
+        $state  = RunState::fromString($data['state'] ?? null);
 
         return new VariationConfig($id, $name, $state, (int)$weight);
     }

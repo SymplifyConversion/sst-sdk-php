@@ -35,11 +35,7 @@ final class ProjectConfig
 
         $id    = $data['id'] ?? 0;
         $name  = $data['name'] ?? '';
-        $state = ProjectState::PAUSED;
-
-        if ('active' === ($data['state'] ?? null)) {
-            $state  = ProjectState::ACTIVE;
-        }
+        $state = RunState::fromString($data['state'] ?? null);
 
         /** @var array<VariationConfig> $variations */
         $variations = [];

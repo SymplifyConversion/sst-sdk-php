@@ -9,7 +9,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use SymplifyConversion\SSTSDK\Config\ClientConfig;
 use SymplifyConversion\SSTSDK\Config\ProjectConfig;
-use SymplifyConversion\SSTSDK\Config\ProjectState;
+use SymplifyConversion\SSTSDK\Config\RunState;
 use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
 use SymplifyConversion\SSTSDK\Config\VariationConfig;
 use SymplifyConversion\SSTSDK\Cookies\AllocationStatus;
@@ -197,7 +197,7 @@ final class Client
             return null;
         }
 
-        if (ProjectState::ACTIVE !== $foundProject->state) {
+        if (RunState::ACTIVE !== $foundProject->state) {
             return null;
         }
 

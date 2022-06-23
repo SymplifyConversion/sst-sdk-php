@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SymplifyConversion\SSTSDK;
 
 use SymplifyConversion\SSTSDK\Config\ProjectConfig;
-use SymplifyConversion\SSTSDK\Config\ProjectState;
+use SymplifyConversion\SSTSDK\Config\RunState;
 use SymplifyConversion\SSTSDK\Config\VariationConfig;
 
 final class Allocation
@@ -22,7 +22,7 @@ final class Allocation
      */
     public static function findVariationForVisitor(ProjectConfig $project, string $visitorID): ?VariationConfig
     {
-        if ('' === $visitorID || ProjectState::ACTIVE !== $project->state) {
+        if ('' === $visitorID || RunState::ACTIVE !== $project->state) {
             return null;
         }
 
@@ -35,7 +35,7 @@ final class Allocation
             $pointer += $variationConfig->weight;
 
             if ($hash <= $pointer) {
-                return ProjectState::ACTIVE === $variationConfig->state ? $variationConfig : null;
+                return RunState::ACTIVE === $variationConfig->state ? $variationConfig : null;
             }
         }
 

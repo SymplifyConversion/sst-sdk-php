@@ -5,7 +5,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use SymplifyConversion\SSTSDK\Allocation;
 use SymplifyConversion\SSTSDK\Config\ProjectConfig;
-use SymplifyConversion\SSTSDK\Config\ProjectState;
+use SymplifyConversion\SSTSDK\Config\RunState;
 use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
 use SymplifyConversion\SSTSDK\Config\VariationConfig;
 
@@ -70,18 +70,18 @@ final class AllocationTest extends TestCase
         $testProject = new ProjectConfig(
             10000,
             'test project',
-            ProjectState::ACTIVE,
+            RunState::ACTIVE,
             [
                 new VariationConfig(
                     $originalID,
                     'Original',
-                    ProjectState::ACTIVE,
+                    RunState::ACTIVE,
                     1,
                 ),
                 new VariationConfig(
                     $variationID,
                     'Variation',
-                    ProjectState::ACTIVE,
+                    RunState::ACTIVE,
                     99,
                 ),
             ]
