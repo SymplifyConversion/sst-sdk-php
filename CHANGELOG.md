@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - persist allocations in cookie, we want it stable even if config changes
 - add data driven SDK compatibility test suite
 ### Changed
+- Bump guzzle dependency in example code (CVE-2022-31090, CVE-2022-31091)
 - move cookie handling out from visitor module, needed for allocations as well
 - total weight is always 100, allows for projects without full allocation
 - don't allocate if project is inactive

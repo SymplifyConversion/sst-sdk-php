@@ -9,7 +9,7 @@
   "require": {
     "php": ">=7.4",
     "ext-fileinfo": "*",
-    "guzzlehttp/guzzle": "7.4.4",
+    "guzzlehttp/guzzle": "7.4.5",
     "kevinrob/guzzle-cache-middleware":"v4.0.1.",
     "kodus/file-cache": "1.1.1",
     "symplify-conversion/sst-sdk-php": "dev-main"
