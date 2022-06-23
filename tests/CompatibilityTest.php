@@ -91,7 +91,7 @@ final class CompatibilityTest extends TestCase
         $cookiesAfter = json_decode($cookieJar->getCookie('sg_cookies') ?? '{}', true);
 
         foreach ($expect_sg_cookie_properties_match as $propertyKey => $expectProperty) {
-            $parts = preg_split("_/_", $propertyKey);
+            $parts = preg_split("_/_", "$propertyKey");
             $prop  = $cookiesAfter;
 
             do {

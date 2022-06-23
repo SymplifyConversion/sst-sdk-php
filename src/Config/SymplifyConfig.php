@@ -10,16 +10,20 @@ final class SymplifyConfig
     /** Unix timestamp when this config was last updated */
     public int $updated;
 
+    /** The website privacy mode setting */
+    public int $privacyMode;
+
     /** @var array<ProjectConfig> */
     public array $projects;
 
     /**
      * @param array<ProjectConfig> $projects
      */
-    function __construct(int $updated, array $projects)
+    function __construct(int $updated, int $privacyMode, array $projects)
     {
-        $this->updated  = $updated;
-        $this->projects = $projects;
+        $this->updated     = $updated;
+        $this->privacyMode = $privacyMode;
+        $this->projects    = $projects;
     }
 
     /**
@@ -28,7 +32,8 @@ final class SymplifyConfig
     public static function fromArray(array $data): SymplifyConfig
     {
 
-        $updated = $data['updated'] ?? 0;
+        $updated     = $data['updated'] ?? 0;
+        $privacyMode = $data['privacy_mode'] ?? 0;
 
         /** @var array<ProjectConfig> $projects */
         $projects = [];
@@ -37,7 +42,7 @@ final class SymplifyConfig
             $projects[] = ProjectConfig::fromArray($projectData);
         }
 
-        return new SymplifyConfig($updated, $projects);
+        return new SymplifyConfig($updated, $privacyMode, $projects);
     }
 
     public static function fromJSON(string $json): ?SymplifyConfig
