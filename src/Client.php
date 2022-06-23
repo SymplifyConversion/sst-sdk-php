@@ -123,7 +123,7 @@ final class Client
 
         try {
             if (!$this->config) {
-                $this->logger->error('findVariation called before config is available');
+                $this->logger->warning('findVariation called before config is available, returning null allocation');
 
                 return null;
             }
@@ -143,7 +143,7 @@ final class Client
             $sgCookies = SymplifyCookie::fromCookieJar($this->websiteID, $cookies, $this->logger);
 
             if (is_null($sgCookies)) {
-                $this->logger->error("unable to get JSON cookie, aborting");
+                $this->logger->warning("unable to get JSON cookie, returning null allocation");
 
                 return null;
             }
@@ -159,7 +159,7 @@ final class Client
                     $allocation = $sgCookies->getAllocation($foundProject);
 
                     if (is_null($allocation)) {
-                        $this->logger->error("bad cookie: variation allocation is not right");
+                        $this->logger->error("bad cookie: status is allocated but there is no persisted variation");
 
                         return null;
                     }
@@ -174,7 +174,7 @@ final class Client
             $visitorID = $sgCookies->getVisitorID();
 
             if (is_null($visitorID)) {
-                $this->logger->error('no visitor ID assigned, aborting');
+                $this->logger->error('no visitor ID assigned, returning null allocation');
 
                 return null;
             }
@@ -228,7 +228,7 @@ final class Client
         $response = $this->httpClient ? $this->downloadWithPsrHttpClient($url) : $this->downloadWithCurl($url);
 
         if (!$response) {
-            $this->logger->error('no config JSON to parse');
+            $this->logger->error('CDN response empty, no config JSON to parse');
 
             return null;
         }
@@ -257,7 +257,7 @@ final class Client
         // phpcs:ignore
         curl_setopt($curl, CURLOPT_PROGRESSFUNCTION, function ($dltotal, $dlnow, $ultotal, $ulnow) {
             if ($this->maxDownloadBytes < $dltotal) {
-                $this->logger->error('SST config is too large');
+                $this->logger->error('download aborted, SST config is too large');
 
                 return 1; // abort download
             }
@@ -303,7 +303,7 @@ final class Client
         }
 
         if ($this->maxDownloadBytes < $response->getBody()->getSize()) {
-            $this->logger->error('SST config is too large');
+            $this->logger->error('download aborted, SST config is too large');
 
             return null;
         }
