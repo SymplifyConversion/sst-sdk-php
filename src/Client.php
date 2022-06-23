@@ -8,8 +8,10 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use SymplifyConversion\SSTSDK\Config\ClientConfig;
+use SymplifyConversion\SSTSDK\Config\ProjectConfig;
 use SymplifyConversion\SSTSDK\Config\ProjectState;
 use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
+use SymplifyConversion\SSTSDK\Config\VariationConfig;
 use SymplifyConversion\SSTSDK\Cookies\AllocationStatus;
 use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 use SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar;
@@ -117,79 +119,39 @@ final class Client
      */
     public function findVariation(string $projectName, ?CookieJar $cookies = null): ?string
     {
-        if (null === $cookies) {
-            $cookies = new DefaultCookieJar();
-        }
-
         try {
-            if (!$this->config) {
-                $this->logger->warning('findVariation called before config is available, returning null allocation');
+            $foundProject = $this->findActiveProject($projectName);
 
+            if (is_null($foundProject)) {
                 return null;
             }
 
-            $foundProject = $this->config->findProjectWithName($projectName);
-
-            if (!$foundProject) {
-                $this->logger->warning("project does not exist: '$projectName'");
-
-                return null;
-            }
-
-            if (ProjectState::ACTIVE !== $foundProject->state) {
-                return null;
-            }
+            $cookies ??= new DefaultCookieJar();
 
             $sgCookies = SymplifyCookie::fromCookieJar($this->websiteID, $cookies, $this->logger);
 
             if (is_null($sgCookies)) {
-                $this->logger->warning("unable to get JSON cookie, returning null allocation");
-
                 return null;
             }
 
-            // check if we already have allocation info from before in the cookie
-            switch ($sgCookies->getAllocationStatus($foundProject)) {
-                case AllocationStatus::NULL_ALLOCATION:
-                    // we have null from before
-                    return null;
+            $persistedVariation = $this->findVariationInCookie($foundProject, $sgCookies);
 
-                case AllocationStatus::VARIATION_ALLOCATION:
-                    // we should have a variation from before already
-                    $allocation = $sgCookies->getAllocation($foundProject);
-
-                    if (is_null($allocation)) {
-                        $this->logger->error("bad cookie: status is allocated but there is no persisted variation");
-
-                        return null;
-                    }
-
-                    return $allocation->name;
-
-                case AllocationStatus::NONE:
-                default:
-                    // we need to find a variation, continue
+            if (false !== $persistedVariation) {
+                // if there was something persisted, we return and don't change anything in the cookie
+                return is_null($persistedVariation) ? null : $persistedVariation->name;
             }
 
-            $visitorID = $sgCookies->getVisitorID();
+            $allocatedVariation = $this->allocateVariation($foundProject, $sgCookies);
 
-            if (is_null($visitorID)) {
-                $this->logger->error('no visitor ID assigned, returning null allocation');
-
-                return null;
-            }
-
-            $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
-
-            if (is_null($foundVariation)) {
+            if (is_null($allocatedVariation)) {
                 $sgCookies->setNullAllocation($foundProject);
             } else {
-                $sgCookies->setAllocation($foundProject, $foundVariation);
+                $sgCookies->setAllocation($foundProject, $allocatedVariation);
             }
 
             $sgCookies->saveTo($cookies);
 
-            return is_null($foundVariation) ? null : $foundVariation->name;
+            return is_null($allocatedVariation) ? null : $allocatedVariation->name;
         } catch (\Throwable $t) {
             $this->logger->error('findVariation failed', ['exception' => $t]);
 
@@ -217,6 +179,61 @@ final class Client
         }
 
         return $projectNames;
+    }
+
+    private function findActiveProject(string $projectName): ?ProjectConfig
+    {
+        if (!$this->config) {
+            $this->logger->warning('findVariation called before config is available, returning null allocation');
+
+            return null;
+        }
+
+        $foundProject = $this->config->findProjectWithName($projectName);
+
+        if (!$foundProject) {
+            $this->logger->warning("project does not exist: '$projectName'");
+
+            return null;
+        }
+
+        if (ProjectState::ACTIVE !== $foundProject->state) {
+            return null;
+        }
+
+        return $foundProject;
+    }
+
+    /**
+     * @return VariationConfig | false | null false if there is no allocation in the cookie
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
+     */
+    private function findVariationInCookie(ProjectConfig $project, SymplifyCookie $sgCookies)
+    {
+        switch ($sgCookies->getAllocationStatus($project)) {
+            case AllocationStatus::NULL_ALLOCATION:
+                return null;
+
+            case AllocationStatus::VARIATION_ALLOCATION:
+                return $sgCookies->getAllocation($project);
+
+            case AllocationStatus::NONE:
+            default:
+                return false;
+        }
+    }
+
+    private function allocateVariation(ProjectConfig $project, SymplifyCookie $sgCookies): ?VariationConfig
+    {
+        $visitorID = $sgCookies->getVisitorID();
+
+        if (is_null($visitorID)) {
+            $this->logger->error('no visitor ID assigned, returning null allocation');
+
+            return null;
+        }
+
+        return Allocation::findVariationForVisitor($project, $visitorID);
     }
 
     /**
