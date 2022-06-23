@@ -47,6 +47,9 @@ final class Client
     /** @var LoggerInterface a logger to collect messages from the SDK */
     private LoggerInterface $logger;
 
+    /** @var ?string override the domain for which to write Symplify cookies */
+    private ?string $cookieDomain;
+
     /**
      * @throws \InvalidArgumentException if $cdnBaseURL is not a URL, or has no scheme or host.
      * @throws \InvalidArgumentException if an HTTP client is given without a corresponding request factory.
@@ -75,13 +78,18 @@ final class Client
         $this->httpRequests     = $httpRequests;
         $this->maxDownloadBytes = $clientConfig->getMaxDownloadBytes();
         $this->logger           = new PrefixedLogger('SSTSDK: ', $clientConfig->getLogger());
+        $this->cookieDomain     = $clientConfig->getCookieDomain();
 
         $this->config = null;
     }
 
-    public static function withDefaults(string $websiteID, bool $autoLoadConfig = true): self
+    public static function withDefaults(
+        string $websiteID,
+        bool $autoLoadConfig = true,
+        ?string $cookieDomain = null
+    ): self
     {
-        $client = new self(new ClientConfig($websiteID));
+        $client = new self(new ClientConfig($websiteID, $cookieDomain));
 
         if ($autoLoadConfig) {
             $client->loadConfig();
@@ -126,7 +134,7 @@ final class Client
                 return null;
             }
 
-            $cookies ??= new DefaultCookieJar();
+            $cookies ??= new DefaultCookieJar($this->cookieDomain);
 
             $sgCookies = SymplifyCookie::fromCookieJar($this->websiteID, $cookies, $this->logger);
 
@@ -153,7 +161,7 @@ final class Client
 
             return is_null($allocatedVariation) ? null : $allocatedVariation->name;
         } catch (\Throwable $t) {
-            $this->logger->error('findVariation failed', ['exception' => $t]);
+            $this->logger->error('findVariation failed: {exception}', ['exception' => $t]);
 
             return null;
         }

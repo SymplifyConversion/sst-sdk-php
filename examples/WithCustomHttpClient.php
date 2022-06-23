@@ -16,6 +16,12 @@ use SymplifyConversion\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
 $websiteID  = "4711";
 $cdnBaseURL = getenv('SSTSDK_CDN_BASEURL');
 
+$cookieDomain = getenv('SSTSDK_COOKIE_DOMAIN');
+
+if (!$cookieDomain) {
+    $cookieDomain = ".localhost.test";
+}
+
 $cache           = new Psr16CacheStorage(new FileCache('/tmp/sstsdk-examples-httpcache', 500));
 $cacheMiddleware = new CacheMiddleware(new PublicCacheStrategy($cache));
 $stack           = HandlerStack::create();
@@ -24,7 +30,7 @@ $stack->push($cacheMiddleware, 'cache');
 $httpClient   = new HttpClient(['handler' => $stack]);
 $httpRequests = new HttpFactory();
 
-$clientConfig = (new SymplifyClientConfig($websiteID))
+$clientConfig = (new SymplifyClientConfig($websiteID, $cookieDomain))
     ->withCdnBaseURL($cdnBaseURL)
     ->withHttpClient($httpClient)
     ->withHttpRequests($httpRequests);

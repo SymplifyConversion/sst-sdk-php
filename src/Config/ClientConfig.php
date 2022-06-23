@@ -32,7 +32,14 @@ final class ClientConfig
     /** @var LoggerInterface a logger to collect messages from the SDK */
     private LoggerInterface $logger;
 
-    function __construct(string $websiteID)
+    /** @var ?string override the domain for which to write Symplify cookies */
+    private ?string $cookieDomain;
+
+    /**
+     * @param string      $websiteID your website ID
+     * @param string|null $cookieDomain set to override the domain for Symplify cookie writing
+     */
+    function __construct(string $websiteID, ?string $cookieDomain = null)
     {
         $this->websiteID        = $websiteID;
         $this->cdnBaseURL       = self::DEFAULT_CDN_BASEURL;
@@ -40,6 +47,7 @@ final class ClientConfig
         $this->httpClient       = null;
         $this->httpRequests     = null;
         $this->logger           = new NullLogger();
+        $this->cookieDomain     = $cookieDomain;
     }
 
     public function getWebsiteID(): string
@@ -115,6 +123,20 @@ final class ClientConfig
     public function getLogger(): LoggerInterface
     {
         return $this->logger;
+    }
+
+    public function withCookieDomain(string $newCookieDomain): ClientConfig
+    {
+        $copy = clone $this;
+
+        $copy->cookieDomain = $newCookieDomain;
+
+        return $copy;
+    }
+
+    public function getCookieDomain(): ?string
+    {
+        return $this->cookieDomain;
     }
 
 }

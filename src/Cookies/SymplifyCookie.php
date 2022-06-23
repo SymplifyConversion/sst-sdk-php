@@ -84,7 +84,7 @@ final class SymplifyCookie
     public function saveTo(CookieJar $cookies): void
     {
         $jsonValue = json_encode($this->underlying);
-        $cookies->setCookie(self::JSON_COOKIE_NAME, $jsonValue);
+        $cookies->setCookie(self::JSON_COOKIE_NAME, $jsonValue, 90);
     }
 
     /**

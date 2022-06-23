@@ -10,8 +10,8 @@ then
   exit 1
 fi
 
-EXAMPLE_SERVER_ADDR=${EXAMPLE_SERVER_ADDR:-localhost:8910}
-EXAMPLE_CDN_ADDR=${EXAMPLE_CDN_ADDR:-localhost:8911}
+EXAMPLE_SERVER_ADDR=${EXAMPLE_SERVER_ADDR:-symplify-demoapp.localhost.test:8910}
+EXAMPLE_CDN_ADDR=${EXAMPLE_CDN_ADDR:-fake-cdn.localhost.test:8911}
 
 # SSTSDK_* variables are not special, they just happen to be used by example scripts
 export SSTSDK_CDN_BASEURL="http://$EXAMPLE_CDN_ADDR"

@@ -7,8 +7,13 @@ use SymplifyConversion\SSTSDK\Config\ClientConfig;
 
 $websiteID  = "4711";
 $cdnBaseURL = getenv('SSTSDK_CDN_BASEURL');
+$cookieDomain = getenv('SSTSDK_COOKIE_DOMAIN');
 
-$clientConfig = (new ClientConfig($websiteID))->withCdnBaseURL($cdnBaseURL);
+if (!$cookieDomain) {
+    $cookieDomain = ".localhost.test";
+}
+
+$clientConfig = (new ClientConfig($websiteID, $cookieDomain))->withCdnBaseURL($cdnBaseURL);
 $sdk          = new SymplifyClient($clientConfig);
 
 $sdk->loadConfig();

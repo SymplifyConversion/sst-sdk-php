@@ -12,7 +12,13 @@ $missingProject = filter_input(INPUT_GET, 'missingProject', FILTER_VALIDATE_BOOL
 $websiteID  = $badJSON ? "42" : "4711";
 $cdnBaseURL = getenv('SSTSDK_CDN_BASEURL');
 
-$clientConfig = (new ClientConfig($websiteID))
+$cookieDomain = getenv('SSTSDK_COOKIE_DOMAIN');
+
+if (!$cookieDomain) {
+    $cookieDomain = ".localhost.test";
+}
+
+$clientConfig = (new ClientConfig($websiteID, $cookieDomain))
     ->withLogger(new ErrorLogLogger())
     ->withCdnBaseURL($cdnBaseURL);
 
