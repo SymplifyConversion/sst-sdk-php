@@ -8,6 +8,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use SymplifyConversion\SSTSDK\Config\ClientConfig;
+use SymplifyConversion\SSTSDK\Config\ProjectState;
 use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
 use SymplifyConversion\SSTSDK\Cookies\AllocationStatus;
 use SymplifyConversion\SSTSDK\Cookies\CookieJar;
@@ -135,7 +136,9 @@ final class Client
                 return null;
             }
 
-            // TODO(Fabian) abort on inactive project
+            if (ProjectState::ACTIVE !== $foundProject->state) {
+                return null;
+            }
 
             $sgCookies = SymplifyCookie::fromCookieJar($this->websiteID, $cookies, $this->logger);
 
