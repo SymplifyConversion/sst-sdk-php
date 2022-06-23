@@ -13,7 +13,7 @@ final class DefaultCookieJar implements CookieJar
     public function getCookie(string $name): ?string
     {
         // phpcs:ignore
-        return $_COOKIE[$name];
+        return $_COOKIE[$name] ?? null;
     }
 
     /**
