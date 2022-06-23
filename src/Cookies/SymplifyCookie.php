@@ -151,12 +151,14 @@ final class SymplifyCookie
         $this->setValue($project->id . "_ch", -1);
     }
 
-    private function getValue(string $key)
+    // @phpstan-ignore-next-line
+    private function getValue(string $key) // phpcs:ignore
     {
         return $this->underlying[$this->websiteID][$key] ?? null;
     }
 
-    private function setValue(string $key, $newValue): void
+    // @phpstan-ignore-next-line
+    private function setValue(string $key, $newValue): void // phpcs:ignore
     {
         $this->underlying[$this->websiteID][$key] = $newValue;
     }
@@ -166,7 +168,7 @@ final class SymplifyCookie
      *
      * @throws \Exception if random number generation fails
      */
-    static function newUUID(): string
+    private static function newUUID(): string
     {
         $buf = random_bytes(16);
 
