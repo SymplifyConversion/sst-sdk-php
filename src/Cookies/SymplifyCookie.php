@@ -47,9 +47,9 @@ final class SymplifyCookie
             // there is none, we'll create a valid one
             return new SymplifyCookie(
                 $websiteID,
-                [
+                array(
                     self::JSON_COOKIE_VERSION_KEY => self::SUPPORTED_JSON_COOKIE_VERSION,
-                ],
+                ),
             );
         }
 
@@ -105,11 +105,11 @@ final class SymplifyCookie
 
     public function getAllocationStatus(ProjectConfig $project): int
     {
-        if (-1 === $this->getValue("" . $project->id . "_ch")) {
+        if (-1 === $this->getValue($project->id . "_ch")) {
             return AllocationStatus::NULL_ALLOCATION;
         }
 
-        if ('array' === gettype($this->getValue("" . $project->id))) {
+        if ('array' === gettype($this->getValue($project->id . ""))) {
             return AllocationStatus::VARIATION_ALLOCATION;
         }
 
@@ -118,13 +118,37 @@ final class SymplifyCookie
 
     public function getAllocation(ProjectConfig $project): ?VariationConfig
     {
-        $allocated = $this->getValue("" . $project->id);
+        $allocated = $this->getValue($project->id. "");
 
         if ('array' === gettype($allocated)) {
             return $project->findVariationWithID($allocated[0]);
         }
 
         return null;
+    }
+
+    public function setAllocation(ProjectConfig $project, VariationConfig $variation): void
+    {
+        $projectID = $project->id;
+
+        $aud_p = $this->getValue("aud_p");
+
+        if ('array' !== gettype($aud_p)) {
+            $aud_p = array();
+        }
+
+        if (!in_array($projectID, $aud_p, true)) {
+            $aud_p[] = $projectID;
+        }
+
+        $this->setValue("aud_p", $aud_p);
+        $this->setValue($projectID . "_ch", 1);
+        $this->setValue($projectID . "", array($variation->id));
+    }
+
+    public function setNullAllocation(ProjectConfig $project): void
+    {
+        $this->setValue($project->id . "_ch", -1);
     }
 
     private function getValue(string $key)

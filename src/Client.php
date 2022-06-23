@@ -179,15 +179,14 @@ final class Client
             $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
 
             if (is_null($foundVariation)) {
-                // TODO(Fabian) persist null allocation
-                return null;
+                $sgCookies->setNullAllocation($foundProject);
+            } else {
+                $sgCookies->setAllocation($foundProject, $foundVariation);
             }
-
-            // TODO(Fabian) persist variation allocation
 
             $sgCookies->saveTo($cookies);
 
-            return $foundVariation->name;
+            return is_null($foundVariation) ? null : $foundVariation->name;
         } catch (\Throwable $t) {
             $this->logger->error('findVariation failed', ['exception' => $t]);
 
