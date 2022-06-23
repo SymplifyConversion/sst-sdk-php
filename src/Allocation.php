@@ -18,7 +18,7 @@ final class Allocation
      *
      * If the visitor ID is empty, always returns the original variation.
      *
-     * @return VariationConfig the allocated variation, or null
+     * @return ?VariationConfig the allocated variation, or null
      */
     public static function findVariationForVisitor(ProjectConfig $project, string $visitorID): ?VariationConfig
     {
