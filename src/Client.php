@@ -206,9 +206,8 @@ final class Client
 
     /**
      * @return VariationConfig | false | null false if there is no allocation in the cookie
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
      */
-    private function findVariationInCookie(ProjectConfig $project, SymplifyCookie $sgCookies)
+    private function findVariationInCookie(ProjectConfig $project, SymplifyCookie $sgCookies) // phpcs:ignore
     {
         switch ($sgCookies->getAllocationStatus($project)) {
             case AllocationStatus::NULL_ALLOCATION:
