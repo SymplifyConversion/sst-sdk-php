@@ -12,7 +12,7 @@ final class TestCookieJar implements CookieJar
         return $this->cookies[$name] ?? null;
     }
 
-    public function setCookie(string $name, string $value): void
+    public function setCookie(string $name, string $value, int $expireInDays = 90): void //phpcs:ignore
     {
         $this->cookies[$name] = $value;
     }

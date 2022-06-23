@@ -15,7 +15,6 @@ Changes
 
 See [CHANGELOG.md](./CHANGELOG.md)
 
-
 Requirements
 ============
 
@@ -158,13 +157,15 @@ $ act -P ubuntu-latest=shivammathur/node:latest
 
 ## Local Testing
 
-The `examples` directory contains example scripts to show how to use the SDK, but they are also a nice way to test
-locally during development.
+The `examples` directory contains example scripts to show how to use the SDK,
+but they are also a nice way to test locally during development.
+They expect symplify-demoapp.localhost.test and fake-cdn.localhost.test to be
+names for 127.0.0.1 in your hosts file.
 
 ```
 # this starts php, serving the contents of examples, with some setup for the SDK
 $ (cd examples; ./example-server.sh) &
-$ curl http://localhost:8910/WithCustomHttpClient.php
+$ curl http://symplify-demoapp.localhost.test:8910/WithCustomHttpClient.php
 [Wed Apr 13 18:51:56 2022] 127.0.0.1:52273 Accepted
 [Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 Accepted
 [Wed Apr 13 18:51:56 2022] 127.0.0.1:52274 [INFO] ExamplesCDN: GET /4711/sstConfig.json
@@ -174,7 +175,7 @@ $ curl http://localhost:8910/WithCustomHttpClient.php
  * discount
    - assigned variation: original
 
-$ curl http://localhost:8910/WithCustomHttpClient.php
+$ curl http://symplify-demoapp.localhost.test:8910/WithCustomHttpClient.php
 [Wed Apr 13 18:51:58 2022] 127.0.0.1:52275 Accepted
 [Wed Apr 13 18:51:58 2022] 127.0.0.1:52275 [200]: GET /WithCustomHttpClient.php
 [Wed Apr 13 18:51:58 2022] 127.0.0.1:52275 Closing
@@ -185,7 +186,7 @@ $ curl http://localhost:8910/WithCustomHttpClient.php
 
 You can get stable variation allocations by configuring curl for cookies e.g.
 ```
-curl --cookie cookiejar.txt --cookie-jar cookiejar.txt http://localhost:8910/Hello.php
+curl --cookie cookiejar.txt --cookie-jar cookiejar.txt http://symplify-demoapp.localhost.test:8910/Hello.php
 ```
 
 ## Troubleshooting

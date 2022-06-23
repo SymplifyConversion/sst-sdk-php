@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- cookies: make domain overridable, set expires
 - persist allocations in cookie, we want it stable even if config changes
 - add data driven SDK compatibility test suite
 ### Changed
