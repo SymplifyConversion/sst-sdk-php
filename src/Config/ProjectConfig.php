@@ -14,13 +14,16 @@ final class ProjectConfig
     /** @var array<VariationConfig> */
     public array $variations;
 
+    public int $state;
+
     /**
      * @param array<VariationConfig> $variations
      */
-    function __construct(int $id, string $name, array $variations)
+    function __construct(int $id, string $name, int $state, array $variations)
     {
         $this->id         = $id;
         $this->name       = $name;
+        $this->state      = $state;
         $this->variations = $variations;
     }
 
@@ -30,8 +33,9 @@ final class ProjectConfig
     public static function fromArray(array $data): ProjectConfig
     {
 
-        $id   = $data['id'] ?? 0;
-        $name = $data['name'] ?? '';
+        $id    = $data['id'] ?? 0;
+        $name  = $data['name'] ?? '';
+        $state = RunState::fromString($data['state'] ?? null);
 
         /** @var array<VariationConfig> $variations */
         $variations = [];
@@ -40,7 +44,7 @@ final class ProjectConfig
             $variations[] = VariationConfig::fromArray($variationData);
         }
 
-        return new ProjectConfig($id, $name, $variations);
+        return new ProjectConfig($id, $name, $state, $variations);
     }
 
     function findVariationWithID(int $variationID): ?VariationConfig

@@ -4,21 +4,25 @@
     {
       "id": 4711,
       "name": "discount",
+      "state": "active",
       "variations": [
         {
           "id": 42,
           "name": "original",
-          "weight": 10
+          "state": "active",
+          "weight": 70
         },
         {
           "id": 1337,
           "name": "huge",
-          "weight": 2
+          "state": "active",
+          "weight": 20
         },
         {
           "id": 9999,
           "name": "small",
-          "weight": 1
+          "state": "active",
+          "weight": 10
         }
       ]
     }

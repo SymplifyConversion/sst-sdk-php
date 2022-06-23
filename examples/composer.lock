@@ -846,7 +846,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "6f542659ca23ea16a91c4f8251a835ed8ca7d369"
+                "reference": "2d28efc041b91b6f1f0f1d6ebf099556ccdd9a10"
             },
             "require": {
                 "ext-curl": "*",

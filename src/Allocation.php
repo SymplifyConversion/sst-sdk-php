@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymplifyConversion\SSTSDK;
 
 use SymplifyConversion\SSTSDK\Config\ProjectConfig;
+use SymplifyConversion\SSTSDK\Config\RunState;
 use SymplifyConversion\SSTSDK\Config\VariationConfig;
 
 final class Allocation
@@ -17,67 +18,28 @@ final class Allocation
      *
      * If the visitor ID is empty, always returns the original variation.
      *
-     * @return VariationConfig the allocated variation
-     * @throws \Exception if the variation weight configuration in $project is invalid
+     * @return ?VariationConfig the allocated variation, or null
      */
-    public static function findVariationForVisitor(ProjectConfig $project, string $visitorID): VariationConfig
+    public static function findVariationForVisitor(ProjectConfig $project, string $visitorID): ?VariationConfig
     {
-        if ('' === $visitorID) {
-            return $project->findVariationWithName('Original') ?: self::lookupVariationAt($project, 1);
+        if ('' === $visitorID || RunState::ACTIVE !== $project->state) {
+            return null;
         }
 
-        $allocation = self::getAllocation($project, $visitorID);
+        $hashKey = "$visitorID:$project->id";
+        $hash    = Hash::hash_in_window($hashKey, 100);
 
-        return self::lookupVariationAt($project, $allocation);
-    }
-
-    /**
-     * Get a "weighted" pointer into the variations of $project based on a hashed visitor ID.
-     */
-    private static function getAllocation(ProjectConfig $project, string $visitorID): int
-    {
-        $hashKey     = "$visitorID:$project->id";
-        $totalWeight = 0;
-
-        foreach ($project->variations as $variation) {
-            $totalWeight += $variation->weight;
-        }
-
-        return Hash::hash_in_window($hashKey, $totalWeight);
-    }
-
-    /**
-     * Find the variation matching $allocation in $project, by comparing allocation to the relative weight.
-     *
-     * @throws \Exception if $allocation is outside the weight span of the variations in $project
-     */
-    private static function lookupVariationAt(ProjectConfig $project, int $allocation): VariationConfig
-    {
-
-        $totalWeight         = 0;
-        $variationThresholds = [];
+        $pointer = 0;
 
         foreach ($project->variations as $variationConfig) {
-            $totalWeight           += $variationConfig->weight;
-            $variationThresholds[] = [$totalWeight, $variationConfig->id];
-        }
+            $pointer += $variationConfig->weight;
 
-        foreach ($variationThresholds as $variationThreshold) {
-            $threshold   = $variationThreshold[0];
-            $variationID = $variationThreshold[1];
-
-            if ($allocation <= $threshold) {
-                $allocatedVariation = $project->findVariationWithID($variationID);
-
-                break;
+            if ($hash <= $pointer) {
+                return RunState::ACTIVE === $variationConfig->state ? $variationConfig : null;
             }
         }
 
-        if (!isset($allocatedVariation)) {
-            throw new \Exception("[SSTSDK] cannot allocate variation with $allocation in $totalWeight");
-        }
-
-        return $allocatedVariation;
+        return null;
     }
 
 }

@@ -25,17 +25,17 @@ Requirements
 Installing
 ==========
 
-Coming soon...
+Add the dependency through composer:
+
+```
+composer require "symplify-conversion/sst-sdk-php"
+```
 
 Usage
 =====
 
-Using ext-curl for HTTP requests:
-
 ```php
-[...]
 use SymplifyConversion\SSTSDK\Client as SymplifyClient;
-[...]
 
 // 1. configure the SDK and create an instance
 
@@ -70,7 +70,6 @@ and PSR-18 instead of curl, and leverage their caching features. This is of
 course a bit more involved:
 
 ```php
-[...]
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\HandlerStack;
@@ -80,7 +79,6 @@ use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kodus\Cache\FileCache;
 use SymplifyConversion\SSTSDK\Client as SymplifyClient;
 use SymplifyConversion\SSTSDK\Config\ClientConfig as SymplifyClientConfig;
-[...]
 
 // 1. configure the SDK and create an instance
 
@@ -102,7 +100,7 @@ $sdk->loadConfig();
 // steps 2 and 3 are the same as in the previous example
 ```
 
-See more examples of code using the SDK in [./examples](./examples).
+See more examples of code using the SDK in [examples](examples).
 
 SDK Development
 ===============
@@ -110,14 +108,15 @@ SDK Development
 ## Setup
 
 1. Clone this repository
-2. Install the pre-commit hook to avoid bad commits
+2. Install git hooks
 3. Run composer install
 4. Run the test suite to verify things are working
 
 ```shell
 $ git clone git@github.com:SymplifyConversion/sst-sdk-php.git
 $ cd sst-sdk-php
-$ cp ci/pre-commit.sh .git/hooks/pre-commit
+$ cp ci/hook-pre-push.sh .git/hooks/pre-push
+$ cp ci/hook-commit-msg.sh .git/hooks/commit-msg
 $ composer install
 $ ./ci/test.sh
 ```

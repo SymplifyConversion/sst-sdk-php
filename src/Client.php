@@ -8,8 +8,14 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use SymplifyConversion\SSTSDK\Config\ClientConfig;
+use SymplifyConversion\SSTSDK\Config\ProjectConfig;
+use SymplifyConversion\SSTSDK\Config\RunState;
 use SymplifyConversion\SSTSDK\Config\SymplifyConfig;
+use SymplifyConversion\SSTSDK\Config\VariationConfig;
+use SymplifyConversion\SSTSDK\Cookies\AllocationStatus;
+use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 use SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar;
+use SymplifyConversion\SSTSDK\Cookies\SymplifyCookie;
 
 /**
  * A client SDK for Symplify Server-Side Testing.
@@ -110,29 +116,42 @@ final class Client
      *
      * @return string|null the name of the current visitor's assigned variation,
      *         null if there is no matching project or no visitor ID was found.
-     * @throws \Exception not yet implemented
      */
-    public function findVariation(string $projectName): ?string
+    public function findVariation(string $projectName, ?CookieJar $cookies = null): ?string
     {
         try {
-            if (!$this->config) {
-                $this->logger->error('findVariation called before config is available');
+            $foundProject = $this->findActiveProject($projectName);
 
+            if (is_null($foundProject)) {
                 return null;
             }
 
-            $foundProject = $this->config->findProjectWithName($projectName);
+            $cookies ??= new DefaultCookieJar();
 
-            if (!$foundProject) {
-                $this->logger->warning("project does not exist: '$projectName'");
+            $sgCookies = SymplifyCookie::fromCookieJar($this->websiteID, $cookies, $this->logger);
 
+            if (is_null($sgCookies)) {
                 return null;
             }
 
-            $visitorID      = Visitor::ensureVisitorID(new DefaultCookieJar(), $this->logger, $this->websiteID);
-            $foundVariation = Allocation::findVariationForVisitor($foundProject, $visitorID);
+            $persistedVariation = $this->findVariationInCookie($foundProject, $sgCookies);
 
-            return $foundVariation->name;
+            if (false !== $persistedVariation) {
+                // if there was something persisted, we return and don't change anything in the cookie
+                return is_null($persistedVariation) ? null : $persistedVariation->name;
+            }
+
+            $allocatedVariation = $this->allocateVariation($foundProject, $sgCookies);
+
+            if (is_null($allocatedVariation)) {
+                $sgCookies->setNullAllocation($foundProject);
+            } else {
+                $sgCookies->setAllocation($foundProject, $allocatedVariation);
+            }
+
+            $sgCookies->saveTo($cookies);
+
+            return is_null($allocatedVariation) ? null : $allocatedVariation->name;
         } catch (\Throwable $t) {
             $this->logger->error('findVariation failed', ['exception' => $t]);
 
@@ -162,6 +181,60 @@ final class Client
         return $projectNames;
     }
 
+    private function findActiveProject(string $projectName): ?ProjectConfig
+    {
+        if (!$this->config) {
+            $this->logger->warning('findVariation called before config is available, returning null allocation');
+
+            return null;
+        }
+
+        $foundProject = $this->config->findProjectWithName($projectName);
+
+        if (!$foundProject) {
+            $this->logger->warning("project does not exist: '$projectName'");
+
+            return null;
+        }
+
+        if (RunState::ACTIVE !== $foundProject->state) {
+            return null;
+        }
+
+        return $foundProject;
+    }
+
+    /**
+     * @return VariationConfig | false | null false if there is no allocation in the cookie
+     */
+    private function findVariationInCookie(ProjectConfig $project, SymplifyCookie $sgCookies) // phpcs:ignore
+    {
+        switch ($sgCookies->getAllocationStatus($project)) {
+            case AllocationStatus::NULL_ALLOCATION:
+                return null;
+
+            case AllocationStatus::VARIATION_ALLOCATION:
+                return $sgCookies->getAllocation($project);
+
+            case AllocationStatus::NONE:
+            default:
+                return false;
+        }
+    }
+
+    private function allocateVariation(ProjectConfig $project, SymplifyCookie $sgCookies): ?VariationConfig
+    {
+        $visitorID = $sgCookies->getVisitorID();
+
+        if (is_null($visitorID)) {
+            $this->logger->error('no visitor ID assigned, returning null allocation');
+
+            return null;
+        }
+
+        return Allocation::findVariationForVisitor($project, $visitorID);
+    }
+
     /**
      * Download the current SST config.
      */
@@ -171,7 +244,7 @@ final class Client
         $response = $this->httpClient ? $this->downloadWithPsrHttpClient($url) : $this->downloadWithCurl($url);
 
         if (!$response) {
-            $this->logger->error('no config JSON to parse');
+            $this->logger->error('CDN response empty, no config JSON to parse');
 
             return null;
         }
@@ -200,7 +273,7 @@ final class Client
         // phpcs:ignore
         curl_setopt($curl, CURLOPT_PROGRESSFUNCTION, function ($dltotal, $dlnow, $ultotal, $ulnow) {
             if ($this->maxDownloadBytes < $dltotal) {
-                $this->logger->error('SST config is too large');
+                $this->logger->error('download aborted, SST config is too large');
 
                 return 1; // abort download
             }
@@ -246,7 +319,7 @@ final class Client
         }
 
         if ($this->maxDownloadBytes < $response->getBody()->getSize()) {
-            $this->logger->error('SST config is too large');
+            $this->logger->error('download aborted, SST config is too large');
 
             return null;
         }
