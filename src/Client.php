@@ -128,7 +128,13 @@ final class Client
     public function findVariation(string $projectName, ?CookieJar $cookies = null): ?string
     {
         try {
-            $foundProject = $this->findActiveProject($projectName);
+            if (!$this->config) {
+                $this->logger->warning('findVariation called before config is available, returning null allocation');
+
+                return null;
+            }
+
+            $foundProject = $this->findActiveProject($projectName, $this->config);
 
             if (is_null($foundProject)) {
                 return null;
@@ -155,12 +161,7 @@ final class Client
 
             $allocatedVariation = $this->allocateVariation($foundProject, $sgCookies);
 
-            if (is_null($allocatedVariation)) {
-                $sgCookies->setNullAllocation($foundProject);
-            } else {
-                $sgCookies->setAllocation($foundProject, $allocatedVariation);
-            }
-
+            $this->saveAllocation($foundProject, $allocatedVariation, $sgCookies);
             $sgCookies->saveTo($cookies);
 
             return is_null($allocatedVariation) ? null : $allocatedVariation->name;
@@ -193,15 +194,9 @@ final class Client
         return $projectNames;
     }
 
-    private function findActiveProject(string $projectName): ?ProjectConfig
+    private function findActiveProject(string $projectName, SymplifyConfig $config): ?ProjectConfig
     {
-        if (!$this->config) {
-            $this->logger->warning('findVariation called before config is available, returning null allocation');
-
-            return null;
-        }
-
-        $foundProject = $this->config->findProjectWithName($projectName);
+        $foundProject = $config->findProjectWithName($projectName);
 
         if (!$foundProject) {
             $this->logger->warning("project does not exist: '$projectName'");
@@ -245,6 +240,19 @@ final class Client
         }
 
         return Allocation::findVariationForVisitor($project, $visitorID);
+    }
+
+    private function saveAllocation(
+        ProjectConfig $project,
+        ?VariationConfig $allocatedVariation,
+        SymplifyCookie $sgCookies
+    ): void
+    {
+        if (is_null($allocatedVariation)) {
+            $sgCookies->setNullAllocation($project);
+        } else {
+            $sgCookies->setAllocation($project, $allocatedVariation);
+        }
     }
 
     /**
