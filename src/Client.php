@@ -136,6 +136,10 @@ final class Client
 
             $cookies ??= new DefaultCookieJar($this->cookieDomain);
 
+            if (2 === $this->config->privacyMode && '1' !== $cookies->getCookie('sg_optin')) {
+                return null;
+            }
+
             $sgCookies = SymplifyCookie::fromCookieJar($this->websiteID, $cookies, $this->logger);
 
             if (is_null($sgCookies)) {

@@ -144,7 +144,6 @@
     "expect_sg_cookie_properties_match": {}
   },
   {
-    "skip": "not yet implemented",
     "test_name": "bail out if privacy mode 2 and no opt-in",
     "sdk_config": "sdk_config_privacy2.json",
     "website_id": "10001",
@@ -155,7 +154,6 @@
     }
   },
   {
-    "skip": "not yet implemented",
     "test_name": "no bail out if privacy mode 2 but opt-in set",
     "sdk_config": "sdk_config_privacy2.json",
     "website_id": "10001",
