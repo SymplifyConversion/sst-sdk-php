@@ -66,7 +66,7 @@ final class CompatibilityTest extends TestCase
         $httpClient->setDefaultResponse($jsonResponse);
 
         $clientConfig = (new ClientConfig($website_id))
-            ->withLogger(new ErrorLogLogger())
+            // this can help when debugging locally ->withLogger(new ErrorLogLogger())
             ->withCdnBaseURL("http://unittest.example.com")
             ->withHttpClient($httpClient)
             ->withHttpRequests($messageFactory);
