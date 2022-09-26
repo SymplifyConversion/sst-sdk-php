@@ -30,8 +30,9 @@ final class CompatibilityTest extends TestCase
                 $caseData['website_id'],
                 $caseData['cookies'] ?? array(),
                 $caseData['test_project_name'],
-                $caseData['expect_variation_match'],
-                $caseData['expect_sg_cookie_properties_match'],
+                $caseData['expect_variation_match'] ?? null,
+                $caseData['expect_sg_cookie_properties_match'] ?? array(),
+                $caseData['audience_attributes'] ?? []
             ];
         }
 
@@ -51,7 +52,8 @@ final class CompatibilityTest extends TestCase
         array $cookies,
         string $test_project_name,
         ?string $expect_variation_match,
-        array $expect_sg_cookie_properties_match
+        array $expect_sg_cookie_properties_match,
+        array $audience_attributes
     ): void
     {
         if ($skip) {
@@ -80,7 +82,7 @@ final class CompatibilityTest extends TestCase
             $cookieJar->setCookie($cookieName, urldecode($cookieValue));
         }
 
-        $gotVariation = $sdk->findVariation($test_project_name, $cookieJar);
+        $gotVariation = $sdk->findVariation($test_project_name, $audience_attributes, $cookieJar);
 
         if (null === $expect_variation_match || null === $gotVariation) {
             self::assertEquals($expect_variation_match, $gotVariation);
