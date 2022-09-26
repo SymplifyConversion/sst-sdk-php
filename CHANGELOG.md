@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2022-09-26
+### Added
+- handling of custom audiences
+- added test cases for custom audience
+- preview cookie handling and variation choices
+- bumping to 0.4.0 to keep up with the sst-sdk-node package
+
 ## [0.2.0] - 2022-06-23
 ### Added
 - handle optin cookie

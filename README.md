@@ -101,6 +101,41 @@ $sdk->loadConfig();
 
 See more examples of code using the SDK in [examples](examples).
 
+### Custom audience
+
+It's possible to limit for which requests/visitors a certain test project
+should apply by using "audience" rules. See [Audiences.md](docs/Audiences.md)
+for details.
+
+The audience is evaluated when your server calls `findVariation`, and if the
+rules you have setup in the audience references "custom attributes" your
+server must provide the values of these attributes for each request.
+
+For example, you might want a test project to only apply for visitors from a
+certain country. The audience can be configured in your project, using a
+custom attribute "country", and then your server provides it when finding the
+variation:
+
+```php
+function getDiscounts($sdk, $cookieJar) {
+    // this code assumes you have a `lookupGeoIP` helper function in your project
+    $customAttribute = array(lookupGeoIp($usersIPAddress));
+    // `cookieJar` is an example function explained in this README
+    $gotVariation = $sdk->findVariation('Discounts, May 2022', $customAttribute, $cookieJar);
+    
+    switch ($gotVariation) {
+        case 'huge':
+            return [0.25];
+        case 'small':
+            return [0.1];
+    }
+
+    // `findVariation` returns null if the project audience does not match for
+    // a given request. We handle that by a fallthrough return here.
+    return [];
+}
+```
+
 ## SDK Development
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) or [RELEASING.md](./RELEASING.md).

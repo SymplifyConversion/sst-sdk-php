@@ -12,6 +12,10 @@
     {
       "name": "Fabian Bergström",
       "role": "developer"
+    },
+    {
+      "name": "Daniel Westerling",
+      "role": "developer"
     }
   ],
   "require": {
