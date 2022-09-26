@@ -379,7 +379,7 @@ final class Client
     }
 
     /**
-     * @param array<mixed>|null $audienceAttributes
+     * @param array<mixed> $audienceAttributes
      */
     private function handlePreview(
         SymplifyCookie $sgCookies,
