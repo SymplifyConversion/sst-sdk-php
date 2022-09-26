@@ -21,7 +21,6 @@ final class SymplifyCookie
     private const JSON_COOKIE_PREVIEW_VARIATION_KEY = 'pmv';
     private const SUPPORTED_JSON_COOKIE_VERSION = 1;
 
-
     /** @var array<string, mixed> */
     private array $underlying;
     private string $websiteID;
@@ -155,6 +154,23 @@ final class SymplifyCookie
     }
 
     // @phpstan-ignore-next-line
+    public function getPreviewData(): ?array { //phpcs:ignore
+        $projectID = $this->getValue(self::JSON_COOKIE_PREVIEW_PROJECT_KEY);
+
+        if(!is_int($projectID)){
+            return null;
+        }
+
+        $variationID = $this->getValue(self::JSON_COOKIE_PREVIEW_VARIATION_KEY);
+
+        if(!is_int($variationID)){
+            return null;
+        }
+
+        return ['projectID' => $projectID, 'variationID' => $variationID];
+    }
+
+    // @phpstan-ignore-next-line
     private function getValue(string $key) // phpcs:ignore
     {
         return $this->underlying[$this->websiteID][$key] ?? null;
@@ -182,22 +198,6 @@ final class SymplifyCookie
         $buf[8] = chr(ord($buf[8]) & 0x3f | 0x80);
 
         return sprintf('%s%s-%s-%s-%s-%s%s%s', ...str_split(bin2hex($buf), 4));
-    }
-
-    public function getPreviewData(): ?array {
-        $projectID = $this->getValue(self::JSON_COOKIE_PREVIEW_PROJECT_KEY);
-
-        if(!is_int($projectID)){
-            return null;
-        }
-
-        $variationID = $this->getValue(self::JSON_COOKIE_PREVIEW_VARIATION_KEY);
-
-        if(!is_int($variationID)){
-            return null;
-        }
-
-        return ['projectID' => $projectID, 'variationID' => $variationID];
     }
 
 }

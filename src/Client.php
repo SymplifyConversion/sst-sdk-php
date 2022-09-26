@@ -17,6 +17,7 @@ use SymplifyConversion\SSTSDK\Cookies\AllocationStatus;
 use SymplifyConversion\SSTSDK\Cookies\CookieJar;
 use SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar;
 use SymplifyConversion\SSTSDK\Cookies\SymplifyCookie;
+use function assert;
 
 /**
  * A client SDK for Symplify Server-Side Testing.
@@ -85,9 +86,6 @@ final class Client
     }
 
     /**
-     * @param string $websiteID
-     * @param bool $autoLoadConfig
-     * @param string|null $cookieDomain
      * @return static
      */
     public static function withDefaults(
@@ -105,9 +103,6 @@ final class Client
         return $client;
     }
 
-    /**
-     * @return string
-     */
     function getConfigURL(): string
     {
         return "$this->cdnBaseURL/$this->websiteID/sstConfig.json";
@@ -135,7 +130,11 @@ final class Client
      * @return string|null the name of the current visitor's assigned variation,
      *         null if there is no matching project or no visitor ID was found.
      */
-    public function findVariation(string $projectName, array $customAttributes = [], ?CookieJar $cookies = null): ?string
+    public function findVariation( //phpcs:ignore
+        string $projectName,
+        array $customAttributes = [],
+        ?CookieJar $cookies = null
+    ): ?string
     {
         try {
             if (!$this->config) {
@@ -179,7 +178,7 @@ final class Client
             if(!is_null($foundProject->audience_rules)) {
                 $audience = new SymplifyAudience($foundProject->audience_rules, $this->logger);
 
-                if ($audience->eval($customAttributes) !== true) {
+                if (true !== $audience->eval($customAttributes)) {
                     return null;
                 }
             }
@@ -220,11 +219,6 @@ final class Client
         return $projectNames;
     }
 
-    /**
-     * @param string $projectName
-     * @param SymplifyConfig $config
-     * @return ProjectConfig|null
-     */
     private function findActiveProject(string $projectName, SymplifyConfig $config): ?ProjectConfig
     {
         $foundProject = $config->findProjectWithName($projectName);
@@ -261,9 +255,6 @@ final class Client
     }
 
     /**
-     * @param ProjectConfig $project
-     * @param SymplifyCookie $sgCookies
-     * @return VariationConfig|null
      * @throws \Exception
      */
     private function allocateVariation(ProjectConfig $project, SymplifyCookie $sgCookies): ?VariationConfig
@@ -279,12 +270,6 @@ final class Client
         return Allocation::findVariationForVisitor($project, $visitorID);
     }
 
-    /**
-     * @param ProjectConfig $project
-     * @param VariationConfig|null $allocatedVariation
-     * @param SymplifyCookie $sgCookies
-     * @return void
-     */
     private function saveAllocation(
         ProjectConfig $project,
         ?VariationConfig $allocatedVariation,
@@ -392,21 +377,23 @@ final class Client
     }
 
     /**
-     * @param SymplifyCookie $sgCookies
-     * @param ProjectConfig $found_project
-     * @param CookieJar $cookies
      * @param array<string,mixed> $audienceAttributes
-     * @return string|null
      */
-    private function handlePreview(SymplifyCookie $sgCookies, ProjectConfig $found_project, CookieJar $cookies, array $audienceAttributes): ?string {
-
-        if(!empty($found_project->audience_rules)){
+    private function handlePreview(
+        SymplifyCookie $sgCookies,
+        ProjectConfig $found_project,
+        CookieJar $cookies,
+        array $audienceAttributes
+    ): ?string {
+        if(0 !== count($found_project->audience_rules)){
 
             $audience = new SymplifyAudience($found_project->audience_rules, $this->logger);
 
             $audienceTrace = $audience->trace($audienceAttributes);
+
             if(is_string($audienceTrace)){
                 $this->logger->warning($audienceTrace);
+
                 return null;
             }
 
@@ -415,13 +402,12 @@ final class Client
             if(!$this->doesAudienceApply($audience, $audienceAttributes)){
                 return null;
             }
-
         }
 
         $variationID = $sgCookies->getPreviewData()['variationID'] ?? false;
 
-        /* @var VariationConfig $variation */
-        $variation = ($variationID) ? $found_project->findVariationWithID($variationID) : null;
+        $variation = $variationID ? $found_project->findVariationWithID($variationID) : null;
+        assert($variation instanceof VariationConfig);
 
         if($variation){
             $sgCookies->setAllocation($found_project, $variation);
@@ -433,18 +419,18 @@ final class Client
     }
 
     /**
-     * @param SymplifyAudience $audience
-     * @param array $audienceAttributes
-     * @return bool|null
+     * @param array<mixed> $audienceAttributes
      */
     private function doesAudienceApply(SymplifyAudience $audience, array $audienceAttributes): ?bool {
         $audienceEval = $audience->eval($audienceAttributes);
 
         if( is_string($audienceEval)){
             $this->logger->warning('audience check failed: ' . $audienceEval);
+
             return null;
         }
 
         return $audienceEval;
     }
+
 }

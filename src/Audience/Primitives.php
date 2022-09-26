@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace SymplifyConversion\SSTSDK\Audience;
-
-use Exception;
 
 final class Primitives
 {
@@ -27,12 +26,12 @@ final class Primitives
     ];
 
     /**
-     * @param array $args
-     * @param array $environment
+     * @param array<mixed> $args
+     * @param array<mixed> $environment
      * @return string|bool|numeric|array<string,string>
-     * @throws Exception
+     * @throws \Exception
      */
-    public static function PrimitiveFunction(string $primitive, array $args, array $environment, bool $isTrace = false)
+    public static function PrimitiveFunction(string $primitive, array $args, array $environment, bool $isTrace = false) //phpcs:ignore
     {
         foreach ($args as $arg) {
             if (isset($arg['message']) && $isTrace) {
@@ -50,70 +49,89 @@ final class Primitives
                 if (is_bool($args[0])) {
                     return !$args[0];
                 }
+
                 return self::isError($args[0] . ' is not a boolean', $isTrace);
+
             case 'any':
                 foreach ($args as $arg) {
                     if (!is_bool($arg)) {
                         return self::isError($arg . ' is not a boolean', $isTrace);
                     }
 
-                    if ($arg === true) {
+                    if (true === $arg) {
                         return true;
                     }
                 }
+
                 return false;
+
             case 'all':
                 foreach ($args as $arg) {
                     if (!is_bool($arg)) {
                         return self::isError($arg . ' is not a boolean', $isTrace);
                     }
+
                     if (!$arg) {
                         return false;
                     }
                 }
+
                 return true;
+
             case 'equals':
-                return self::stringFun($args[0], $args[1], function ($a, $b) {
+                return self::stringFun($args[0], $args[1], static function ($a, $b) {
                     return $a === $b;
                 }, $isTrace);
+
             case 'contains':
-                return self::stringFun($args[0], $args[1], function ($a, $b) {
-                    return (strstr($a, $b)) !== false;
+                return self::stringFun($args[0], $args[1], static function ($a, $b) {
+                    return false !== strstr($a, $b);
                 }, $isTrace);
+
             case 'matches':
-                return self::stringFun($args[0], $args[1], function ($a, $b) {
-                    return preg_match($b, $a) === 1;
+                return self::stringFun($args[0], $args[1], static function ($a, $b) {
+                    return 1 === preg_match($b, $a);
                 }, $isTrace);
+
             case '==':
-                return self::numberFun($args[0], $args[1], function ($a, $b) {
+                return self::numberFun($args[0], $args[1], static function ($a, $b) {
                     return $a === $b;
                 }, $isTrace);
+
             case '!=':
-                return self::numberFun($args[0], $args[1], function ($a, $b) {
-                    return $a != $b;
+                return self::numberFun($args[0], $args[1], static function ($a, $b) {
+                    return $a !== $b;
                 }, $isTrace);
+
             case '<':
-                return self::numberFun($args[0], $args[1], function ($a, $b) {
+                return self::numberFun($args[0], $args[1], static function ($a, $b) {
                     return $a < $b;
                 }, $isTrace);
+
             case '<=':
-                return self::numberFun($args[0], $args[1], function ($a, $b) {
+                return self::numberFun($args[0], $args[1], static function ($a, $b) {
                     return $a <= $b;
                 }, $isTrace);
+
             case '>':
-                return self::numberFun($args[0], $args[1], function ($a, $b) {
+                return self::numberFun($args[0], $args[1], static function ($a, $b) {
                     return $a > $b;
                 }, $isTrace);
+
             case '>=':
-                return self::numberFun($args[0], $args[1], function ($a, $b) {
+                return self::numberFun($args[0], $args[1], static function ($a, $b) {
                     return $a >= $b;
                 }, $isTrace);
+
             case 'number-attribute':
                 return self::getInEnvNumber($args[0], $environment, $isTrace);
+
             case 'string-attribute':
                 return self::getInEnvString($args[0], $environment, $isTrace);
+
             case 'bool-attribute':
                 return self::getInEnvBool($args[0], $environment, $isTrace);
+
             default:
                 return self::isError(sprintf('Primitive %s is not an implemented primitive.', $primitive), $isTrace);
         }
@@ -122,14 +140,13 @@ final class Primitives
     /**
      * @param mixed $a
      * @param mixed $b
-     * @param callable $function
-     * @param bool $isTrace
-     * @return bool|array
-     * @throws Exception
+     * @return bool|array<mixed>
+     * @throws \Exception
      */
     private static function stringFun($a, $b, callable $function, bool $isTrace = false)
     {
         if (!is_string($a) || !is_string($b))
+
             return self::isError('expected string arguments', $isTrace);
 
         return $function($a, $b);
@@ -138,14 +155,13 @@ final class Primitives
     /**
      * @param mixed $a
      * @param mixed $b
-     * @param callable $function
-     * @param bool $isTrace
-     * @return boolean|array
-     * @throws Exception
+     * @return bool|array<mixed>
+     * @throws \Exception
      */
     private static function numberFun($a, $b, callable $function, bool $isTrace = false)
     {
         if (!is_numeric($a) || !is_numeric($b))
+
             return self::isError('expected number arguments', $isTrace);
 
         return $function((float)$a, (float)$b);
@@ -153,9 +169,9 @@ final class Primitives
 
     /**
      * @param mixed $name
-     * @param mixed[] $environment
-     * @return numeric|array
-     * @throws Exception
+     * @param array<mixed> $environment
+     * @return numeric|array<string,string>
+     * @throws \Exception
      */
     private static function getInEnvNumber($name, array $environment, bool $isTrace = false)
     {
@@ -172,9 +188,9 @@ final class Primitives
 
     /**
      * @param mixed $name
-     * @param array $environment
-     * @return string|array
-     * @throws Exception
+     * @param array<mixed> $environment
+     * @return string|array<string,string>
+     * @throws \Exception
      */
     private static function getInEnvString($name, array $environment, bool $isTrace = false)
     {
@@ -191,9 +207,9 @@ final class Primitives
 
     /**
      * @param mixed $name
-     * @param array $environment
-     * @return bool|array
-     * @throws Exception
+     * @param array<mixed> $environment
+     * @return bool|array<string,string>
+     * @throws \Exception
      */
     private static function getInEnvBool($name, array $environment, bool $isTrace = false)
     {
@@ -211,17 +227,17 @@ final class Primitives
     /**
      * If we get an issue with the calculation, the event should propagate to the top and be printed.
      * This is not the case if the call is from trace() or traceEval()
-     * @param string $message
-     * @param bool $isTrace
-     * @return string[]
-     * @throws Exception
+     *
+     * @return array<string,string>
+     * @throws \Exception
      */
     private static function isError(string $message, bool $isTrace = false): array
     {
         if ($isTrace) {
             return ['message' => $message];
-        } else {
-            throw new Exception($message);
         }
+
+        throw new \Exception($message);
     }
+
 }

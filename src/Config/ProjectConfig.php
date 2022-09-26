@@ -16,7 +16,7 @@ final class ProjectConfig
 
     public int $state;
 
-    /** @var ?mixed[] */
+    /** @var array<mixed> */
     public ?array $audience_rules;
 
     /**

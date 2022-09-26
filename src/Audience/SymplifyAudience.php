@@ -1,22 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SymplifyConversion\SSTSDK\Audience;
 
-
-use Exception;
 use Psr\Log\LoggerInterface;
 
-class SymplifyAudience
+final class SymplifyAudience
 {
+
     /** @var array<int,mixed> $rules */
     public array $rules;
-    private string $errorMessage;
+
     /** @var LoggerInterface a logger to collect messages from the SDK */
     public LoggerInterface $logger;
+    private string $errorMessage;
 
     /**
      * @param array<string,mixed>|string $rules
-     * @param LoggerInterface $logger
      */
     public function __construct($rules, LoggerInterface $logger) {
 
@@ -25,10 +26,11 @@ class SymplifyAudience
         $result = array();
 
         try{
-            $result = (is_string($rules)) ? RulesEngine::parseString($rules) : RulesEngine::parse($rules);
-        } catch( Exception $exception){
+            $result = is_string($rules) ? RulesEngine::parseString($rules) : RulesEngine::parse($rules);
+        } catch( \Throwable $exception){
             $this->errorMessage = $exception->getMessage();
             $this->logger->warning($exception->getMessage());
+
             return;
         }
 
@@ -42,25 +44,25 @@ class SymplifyAudience
     public function eval(array $environment = []){
         // Since the constructor can't return an error message we must have this
         // errorMessage checker and return the error message.
-        if(!empty($this->errorMessage)){
+        if(0 !== count($this->errorMessage)){
             return $this->errorMessage;
         }
 
-
         try {
             $result = RulesEngine::evaluate($this->rules, $environment);
-        } catch(Exception $exception){
+        } catch(\Throwable $exception){
             $this->logger->warning($exception->getMessage());
+
             return $exception->getMessage();
         }
 
         if(!is_bool($result)){
             $this->logger->warning(sprintf('audience result was not boolean (%s)',$result));
+
             return sprintf('audience result was not boolean (%s)',$result);
         }
 
         return $result;
-
     }
 
     /**
@@ -71,14 +73,15 @@ class SymplifyAudience
     {
         // Since the constructor can't return an error message we must have this
         // errorMessage checker and return the error message.
-        if(!empty($this->errorMessage)){
+        if(0 !== count($this->errorMessage)){
             return $this->errorMessage;
         }
 
         try {
             $result = $this->traceEval($this->rules, $environment);
-        } catch(Exception $exception){
+        } catch(\Throwable $exception){
             $this->logger->warning($exception->getMessage());
+
            return $exception->getMessage();
         }
 
@@ -87,7 +90,7 @@ class SymplifyAudience
 
     /**
      * @param mixed $ast
-     * @param mixed[] $environment
+     * @param array<mixed> $environment
      * @return mixed
      * @throws Exception
      */
@@ -95,17 +98,24 @@ class SymplifyAudience
     {
         $astCopy = $ast;
         $returnTrace = [];
+
         if(is_array($ast) && is_string($ast[0])){
             $car = array_shift($ast);
 
             $cdr = $ast;
             $value = RulesEngine::evalApply($car, $cdr, $environment, $isTrace);
             $returnTrace[] = ['call' => $car, 'result' => $value];
-            $traceEval = array_map(function($arg) use ($environment, $isTrace) { return $this->traceEval($arg, $environment, $isTrace);} , $cdr);
+            $traceEval = array_map(
+                function($arg) use ($environment, $isTrace) {
+ return $this->traceEval($arg, $environment, $isTrace);
+} ,
+                $cdr
+            );
 
             return array_merge($returnTrace, $traceEval);
         }
 
         return RulesEngine::evaluate($astCopy, $environment, $isTrace);
     }
+
 }
