@@ -178,8 +178,8 @@ final class Client
             // 3. no preview or variation from before: let's see if this project applies to the visitor
             if(!is_null($foundProject->audience_rules)) {
                 $audience = new SymplifyAudience($foundProject->audience_rules, $this->logger);
-
-                if (true !== $audience->eval($customAttributes)) {
+                
+                if(!$this->doesAudienceApply($audience, $customAttributes)){
                     return null;
                 }
             }
