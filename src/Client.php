@@ -379,7 +379,7 @@ final class Client
     }
 
     /**
-     * @param array<string,mixed> $audienceAttributes
+     * @param array<string,mixed>|null $audienceAttributes
      */
     private function handlePreview(
         SymplifyCookie $sgCookies,
@@ -388,34 +388,34 @@ final class Client
         array $audienceAttributes
     ): ?string {
 
-        $audience_rules = $found_project->audience_rules;
+        if(isset($found_project->audience_rules)){
+            $audience_rules = $found_project->audience_rules;
+            /**
+             * @psalm-suppress TypeDoesNotContainType
+             * @psalm-suppress RedundantCondition
+             * @psalm-suppress PossiblyNullArgument
+             */
+            $lengthOfRules = 'string' === gettype($audience_rules) ?
+                // @phpstan-ignore-next-line
+                strlen((string)$audience_rules) :
+                count($audience_rules);
 
-        /**
-         * @psalm-suppress TypeDoesNotContainType
-         * @psalm-suppress RedundantCondition
-         * @psalm-suppress PossiblyNullArgument
-         */
-        $lengthOfRules = 'string' === gettype($audience_rules) ?
-            // @phpstan-ignore-next-line
-            strlen((string)$audience_rules) :
-            count($audience_rules);
+            if(0 !== $lengthOfRules){
+                $audience = new SymplifyAudience($audience_rules, $this->logger);
 
-        if(0 !== $lengthOfRules){
+                $audienceTrace = $audience->trace($audienceAttributes);
 
-            $audience = new SymplifyAudience($found_project->audience_rules, $this->logger);
+                if(is_string($audienceTrace)){
+                    $this->logger->warning($audienceTrace);
 
-            $audienceTrace = $audience->trace($audienceAttributes);
+                    return null;
+                }
 
-            if(is_string($audienceTrace)){
-                $this->logger->warning($audienceTrace);
+                $cookies->setCookie('sg_audience_trace', json_encode($audienceTrace), 1);
 
-                return null;
-            }
-
-            $cookies->setCookie('sg_audience_trace', json_encode($audienceTrace), 1);
-
-            if(!$this->doesAudienceApply($audience, $audienceAttributes)){
-                return null;
+                if(!$this->doesAudienceApply($audience, $audienceAttributes)){
+                    return null;
+                }
             }
         }
 
@@ -428,7 +428,7 @@ final class Client
 
         $sgCookies->saveTo($cookies);
 
-        return $variation->name ?? null;
+        return $variation->name;
     }
 
     /**

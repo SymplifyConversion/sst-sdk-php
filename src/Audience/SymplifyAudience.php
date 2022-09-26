@@ -22,7 +22,7 @@ final class SymplifyAudience
     public function __construct($rules, LoggerInterface $logger) {
 
         $this->logger = $logger;
-
+        $this->errorMessage = '';
         $result = array();
 
         try{
