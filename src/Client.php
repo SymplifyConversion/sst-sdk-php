@@ -379,7 +379,7 @@ final class Client
     }
 
     /**
-     * @param array<string,mixed>|null $audienceAttributes
+     * @param array<mixed>|null $audienceAttributes
      */
     private function handlePreview(
         SymplifyCookie $sgCookies,
@@ -387,7 +387,6 @@ final class Client
         CookieJar $cookies,
         array $audienceAttributes
     ): ?string {
-
         if(isset($found_project->audience_rules)){
             $audience_rules = $found_project->audience_rules;
             /**
