@@ -127,10 +127,12 @@ final class Client
     /**
      * Returns the name of the variation the visitor is part of in the project with the given name.
      *
+     * @param array<mixed> $customAttributes
      * @return string|null the name of the current visitor's assigned variation,
      *         null if there is no matching project or no visitor ID was found.
      */
-    public function findVariation( //phpcs:ignore
+    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
+    public function findVariation(
         string $projectName,
         array $customAttributes = [],
         ?CookieJar $cookies = null
@@ -385,7 +387,20 @@ final class Client
         CookieJar $cookies,
         array $audienceAttributes
     ): ?string {
-        if(0 !== count($found_project->audience_rules)){
+
+        $audience_rules = $found_project->audience_rules;
+
+        /**
+         * @psalm-suppress TypeDoesNotContainType
+         * @psalm-suppress RedundantCondition
+         * @psalm-suppress PossiblyNullArgument
+         */
+        $lengthOfRules = 'string' === gettype($audience_rules) ?
+            // @phpstan-ignore-next-line
+            strlen((string)$audience_rules) :
+            count($audience_rules);
+
+        if(0 !== $lengthOfRules){
 
             $audience = new SymplifyAudience($found_project->audience_rules, $this->logger);
 
@@ -409,9 +424,7 @@ final class Client
         $variation = $variationID ? $found_project->findVariationWithID($variationID) : null;
         assert($variation instanceof VariationConfig);
 
-        if($variation){
-            $sgCookies->setAllocation($found_project, $variation);
-        }
+        $sgCookies->setAllocation($found_project, $variation);
 
         $sgCookies->saveTo($cookies);
 

@@ -44,7 +44,7 @@ final class SymplifyAudience
     public function eval(array $environment = []){
         // Since the constructor can't return an error message we must have this
         // errorMessage checker and return the error message.
-        if(0 !== count($this->errorMessage)){
+        if(0 !== strlen($this->errorMessage)){
             return $this->errorMessage;
         }
 
@@ -73,7 +73,7 @@ final class SymplifyAudience
     {
         // Since the constructor can't return an error message we must have this
         // errorMessage checker and return the error message.
-        if(0 !== count($this->errorMessage)){
+        if(0 !== strlen($this->errorMessage)){
             return $this->errorMessage;
         }
 
@@ -92,7 +92,7 @@ final class SymplifyAudience
      * @param mixed $ast
      * @param array<mixed> $environment
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     private function traceEval($ast, array $environment, bool $isTrace = true)
     {

@@ -11,6 +11,9 @@ use SymplifyConversion\SSTSDK\Config\ClientConfig;
  */
 final class AudienceTest extends TestCase
 {
+    /**
+     * @return array<mixed>
+     */
     public function audienceTestAttributesProvider(): array {
         $json      = file_get_contents(__DIR__ . "/data/audience_attributes_spec.json");
         $attributesData = json_decode($json, true);
@@ -19,7 +22,7 @@ final class AudienceTest extends TestCase
 
         foreach ($attributesData as $attributeData) {
             $attributes[$attributeData['suite_name']] = [
-                json_encode($attributeData['audience_json']) ?? null,
+                json_encode($attributeData['audience_json']) ?: null,
                 $attributeData['test_cases'] ?? array(),
             ];
         }
@@ -27,6 +30,9 @@ final class AudienceTest extends TestCase
         return $attributes;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function audienceTestProvider(): array {
         $json      = file_get_contents(__DIR__ . "/data/audience_spec.json");
         $audiencesData = json_decode($json, true);
@@ -34,7 +40,7 @@ final class AudienceTest extends TestCase
         foreach($audiencesData as $audienceData){
             foreach ($audienceData['test_cases'] as $test_case) {
                 $test_cases[$audienceData['suite_name']] = [
-                    json_encode($test_case['audience_json']) ?? null,
+                    json_encode($test_case['audience_json']) ?: null,
                     $test_case['expect_result'] ?? $test_case['expect_error'],
                 ];
             }
@@ -43,6 +49,9 @@ final class AudienceTest extends TestCase
         return $test_cases;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function audienceTestTracingProvider(): array {
         $json      = file_get_contents(__DIR__ . "/data/audience_tracing_spec.json");
         $tracesData = json_decode($json, true);
@@ -51,7 +60,7 @@ final class AudienceTest extends TestCase
 
             foreach ($tracesData as $traceData) {
                 $test_cases[$traceData['test_name']] = [
-                    json_encode($traceData['rules']) ?? null,
+                    json_encode($traceData['rules']) ?: null,
                     $traceData ?? array(),
                     $traceData['expect_trace'] ?? null,
                 ];
@@ -60,6 +69,9 @@ final class AudienceTest extends TestCase
         return $test_cases;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function audienceTestValidationProvider(): array {
         $json      = file_get_contents(__DIR__ . "/data/audience_validation_spec.json");
         $validationsData = json_decode($json, true);
@@ -77,6 +89,7 @@ final class AudienceTest extends TestCase
 
     /**
      * @dataProvider audienceTestAttributesProvider
+     * @param array<mixed> $test_cases
      */
     public function testAudienceAttributes( string $audience_json, array $test_cases): void
     {
@@ -93,6 +106,7 @@ final class AudienceTest extends TestCase
 
     /**
      * @dataProvider audienceTestProvider
+     * @param mixed $expectation
      */
     public function testAudiences( string $audience_json, $expectation): void
     {
@@ -107,6 +121,8 @@ final class AudienceTest extends TestCase
 
     /**
      * @dataProvider audienceTestTracingProvider
+     * @param mixed $environment
+     * @param array<mixed> $expectation
      */
     public function testAudienceTracing( string $audience_json, $environment, array $expectation): void
     {
@@ -121,6 +137,7 @@ final class AudienceTest extends TestCase
 
     /**
      * @dataProvider audienceTestValidationProvider
+     * @param array<mixed> $test_cases
      */
     public function testAudienceValidation(array $test_cases): void
     {

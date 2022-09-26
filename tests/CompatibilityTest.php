@@ -43,6 +43,7 @@ final class CompatibilityTest extends TestCase
      * @dataProvider compatibilityTestProvider
      * @param array<string, string> $cookies
      * @param array<mixed>          $expect_sg_cookie_properties_match
+     * @param array<mixed>          $audience_attributes
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     public function testCompatibilityCase(

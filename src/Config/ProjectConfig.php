@@ -21,6 +21,7 @@ final class ProjectConfig
 
     /**
      * @param array<VariationConfig> $variations
+     * @param array<mixed>|null $audience_rules
      */
     function __construct(int $id, string $name, int $state, array $variations, ?array $audience_rules = null)
     {

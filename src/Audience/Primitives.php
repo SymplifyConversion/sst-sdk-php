@@ -31,7 +31,8 @@ final class Primitives
      * @return string|bool|numeric|array<string,string>
      * @throws \Exception
      */
-    public static function PrimitiveFunction(string $primitive, array $args, array $environment, bool $isTrace = false) //phpcs:ignore
+    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
+    public static function PrimitiveFunction(string $primitive, array $args, array $environment, bool $isTrace = false)
     {
         foreach ($args as $arg) {
             if (isset($arg['message']) && $isTrace) {
