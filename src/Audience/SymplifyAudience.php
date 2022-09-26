@@ -14,7 +14,7 @@ final class SymplifyAudience
 
     /** @var LoggerInterface a logger to collect messages from the SDK */
     public LoggerInterface $logger;
-    private string $errorMessage;
+    private string $initializationError;
 
     /**
      * @param array<string,mixed>|string $rules
@@ -22,13 +22,13 @@ final class SymplifyAudience
     public function __construct($rules, LoggerInterface $logger) {
 
         $this->logger = $logger;
-        $this->errorMessage = '';
+        $this->initializationError = '';
         $result = array();
 
         try{
             $result = is_string($rules) ? RulesEngine::parseString($rules) : RulesEngine::parse($rules);
         } catch( \Throwable $exception){
-            $this->errorMessage = $exception->getMessage();
+            $this->initializationError = $exception->getMessage();
             $this->logger->warning($exception->getMessage());
 
             return;
@@ -44,8 +44,8 @@ final class SymplifyAudience
     public function eval(array $environment = []){
         // Since the constructor can't return an error message we must have this
         // errorMessage checker and return the error message.
-        if(0 !== strlen($this->errorMessage)){
-            return $this->errorMessage;
+        if(0 !== strlen($this->initializationError)){
+            return $this->initializationError;
         }
 
         try {
@@ -73,8 +73,8 @@ final class SymplifyAudience
     {
         // Since the constructor can't return an error message we must have this
         // errorMessage checker and return the error message.
-        if(0 !== strlen($this->errorMessage)){
-            return $this->errorMessage;
+        if(0 !== strlen($this->initializationError)){
+            return $this->initializationError;
         }
 
         try {

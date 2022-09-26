@@ -153,8 +153,10 @@ final class SymplifyCookie
         $this->setValue($project->id . "_ch", -1);
     }
 
-    // @phpstan-ignore-next-line
-    public function getPreviewData(): ?array { //phpcs:ignore
+    /**
+     * @return array<int>
+     */
+    public function getPreviewData(): ?array {
         $projectID = $this->getValue(self::JSON_COOKIE_PREVIEW_PROJECT_KEY);
 
         if(!is_int($projectID)){

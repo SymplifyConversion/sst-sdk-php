@@ -34,6 +34,7 @@ final class Primitives
     // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     public static function PrimitiveFunction(string $primitive, array $args, array $environment, bool $isTrace = false)
     {
+        // when tracing, we emulate exceptions by bubbling errors up in the expression
         foreach ($args as $arg) {
             if (isset($arg['message']) && $isTrace) {
                 return $arg;

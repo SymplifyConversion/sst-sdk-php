@@ -15,7 +15,10 @@
       { "audience_json": ["matches", "", "foo"], "expect_result": false },
       { "audience_json": ["matches", "foo", "(bar|foo)"], "expect_result": true },
       { "audience_json": ["matches", "foo", "aa*"], "expect_result": false },
-
+      { "audience_json": ["matches", "", "aa*"], "expect_result": false },
+      { "audience_json": ["matches", "a", "aa*"], "expect_result": true },
+      { "audience_json": ["matches", "aa", "aa*"], "expect_result": true },
+      { "audience_json": ["matches", "aaa", "aa*"], "expect_result": true },
       { "audience_json": ["matches", 2, "2"], "expect_error": "expected string arguments" },
       { "audience_json": ["equals", "", false], "expect_error": "expected string arguments" },
       { "audience_json": ["contains", 4711, 1], "expect_error": "expected string arguments" }
