@@ -119,7 +119,7 @@ variation:
 ```php
 function getDiscounts($sdk, $cookieJar) {
     // this code assumes you have a `lookupGeoIP` helper function in your project
-    $customAttribute = array(lookupGeoIp($usersIPAddress));
+    $customAttribute = array('country' => lookupGeoIp($usersIPAddress)->getCountry());
     // `cookieJar` is an example function explained in this README
     $gotVariation = $sdk->findVariation('Discounts, May 2022', $customAttribute, $cookieJar);
     
