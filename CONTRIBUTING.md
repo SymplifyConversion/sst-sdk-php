@@ -14,6 +14,16 @@ $ composer install
 $ ./ci/test.sh
 ```
 
+### PhpStorm
+
+If you use PhpStorm, change your inspection settings to enable PHP_Stan, Psalm,
+and PHP_CodeSniffer. Set them to the "error" level.
+
+If your IDE inspections disagree with the project configuration, please follow
+the project/CI configuration in this repository. E.g. PhpStorm builtins will
+suggest that you replace array<mixed> with array, but phpstan will complain
+about that.
+
 ## Checklist for Changes
 
 1. pull latest `main`
