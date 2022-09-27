@@ -87,7 +87,7 @@ final class SymplifyAudience
         }
 
         try {
-            $result = $this->traceEval($this->rules, $environment);
+            $result = RulesEngine::traceEvaluate($this->rules, $environment);
         } catch(\Throwable $exception){
             $this->logger->warning($exception->getMessage());
 
@@ -95,36 +95,6 @@ final class SymplifyAudience
         }
 
         return $result;
-    }
-
-    /**
-     * @param mixed $ast
-     * @param array<mixed> $environment
-     * @return mixed
-     * @throws \Exception
-     */
-    private function traceEval($ast, array $environment, bool $isTrace = true)
-    {
-        $astCopy = $ast;
-        $returnTrace = [];
-
-        if(is_array($ast) && is_string($ast[0])){
-            $car = array_shift($ast);
-
-            $cdr = $ast;
-            $value = RulesEngine::evalApply($car, $cdr, $environment, $isTrace);
-            $returnTrace[] = ['call' => $car, 'result' => $value];
-            $traceEval = array_map(
-                function($arg) use ($environment, $isTrace) {
- return $this->traceEval($arg, $environment, $isTrace);
-} ,
-                $cdr
-            );
-
-            return array_merge($returnTrace, $traceEval);
-        }
-
-        return RulesEngine::evaluate($astCopy, $environment, $isTrace);
     }
 
 }

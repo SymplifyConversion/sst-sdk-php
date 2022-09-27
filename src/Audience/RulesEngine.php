@@ -72,12 +72,49 @@ final class RulesEngine
     }
 
     /**
+     * Trace the evaluation of the given rules expression.
+     *
+     * The syntax tree is evaluated node for node, and function calls get
+     * annotated in-place with their result.
+     *
+     * This can be used for debugging or testing expressions in SST development.
+     *
+     * @param mixed $ast
+     * @param array<mixed> $environment
+     * @return mixed
+     * @throws \Exception
+     */
+    public static function traceEvaluate($ast, array $environment, bool $isTrace = true)
+    {
+        $astCopy = $ast;
+        $returnTrace = [];
+
+        if(is_array($ast) && is_string($ast[0])){
+            $car = array_shift($ast);
+
+            $cdr = $ast;
+            $value = self::evalApply($car, $cdr, $environment, $isTrace);
+            $returnTrace[] = ['call' => $car, 'result' => $value];
+            $traceEval = array_map(
+                static function($arg) use ($environment, $isTrace) {
+                    return self::traceEvaluate($arg, $environment, $isTrace);
+                } ,
+                $cdr
+            );
+
+            return array_merge($returnTrace, $traceEval);
+        }
+
+        return self::evaluate($astCopy, $environment, $isTrace);
+    }
+
+    /**
      * @param array<mixed> $cdr
      * @param array<mixed> $environment
      * @return bool|float|int|string|array<string>
      * @throws \Exception
      */
-    public static function evalApply(string $car, array $cdr, array $environment, bool $isTrace = false)
+    static function evalApply(string $car, array $cdr, array $environment, bool $isTrace = false)
     {
         if(!in_array($car,Primitives::PRIMITIVES, true)){
             throw new \Exception(sprintf('%s is not a primitive', $car));
