@@ -196,7 +196,7 @@ final class SymplifyCookie
         // this is a version 4 UUID
         $buf[6] = chr(ord($buf[6]) & 0x0f | 0x40);
 
-        // ...of the "Leach–Salz" variant
+        // ...of the "Leach-Salz" variant
         $buf[8] = chr(ord($buf[8]) & 0x3f | 0x80);
 
         return sprintf('%s%s-%s-%s-%s-%s%s%s', ...str_split(bin2hex($buf), 4));
