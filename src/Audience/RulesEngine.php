@@ -32,7 +32,7 @@ final class RulesEngine
         try {
             $ast = json_decode($ruleString, true, 512, JSON_THROW_ON_ERROR);
         } catch (\Throwable $e){
-            throw new \Exception('rules syntax error');
+            throw new \Exception('rules syntax error', 0, $e);
         }
 
         if(!is_array($ast)){
