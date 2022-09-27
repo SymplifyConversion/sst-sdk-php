@@ -251,5 +251,20 @@
     "expect_extra_cookies": {
       "sg_audience_trace": "[{\"call\":\"equals\",\"result\":false},[{\"call\":\"string-attribute\",\"result\":\"baz\"},\"foo\"],\"bar\"]"
     }
+  },
+  {
+    "test_name": "preview bubbles up audience trace errors",
+    "sdk_config": "sdk_config.json",
+    "website_id": "10001",
+    "test_project_name": "custom audience",
+    "audience_attributes": {
+      "foo": 999
+    },
+    "cookies": {
+      "sg_cookies": "{%2210001%22:{%22visid%22:%22foobar%22%2C%22pmr%22:1005%2C%22pmv%22:10051}%2C%22_g%22:1}"
+    },
+    "expect_extra_cookies": {
+      "sg_audience_trace": "[{\"call\":\"equals\",\"result\":{\"message\":\"'foo' is not a string\"}},[{\"call\":\"string-attribute\",\"result\":{\"message\":\"'foo' is not a string\"}},\"foo\"],\"bar\"]"
+    }
   }
 ]
