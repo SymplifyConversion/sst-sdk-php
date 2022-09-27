@@ -178,7 +178,7 @@ final class Client
             // 3. no preview or variation from before: let's see if this project applies to the visitor
             if(!is_null($foundProject->audience_rules)) {
                 $audience = new SymplifyAudience($foundProject->audience_rules, $this->logger);
-                
+
                 if(!$this->doesAudienceApply($audience, $customAttributes)){
                     return null;
                 }
@@ -378,6 +378,10 @@ final class Client
     }
 
     /**
+     * We are previewing a variation,
+     * - trace the audience rules and give back in cookie
+     * - override the allocation in the cookie for the previewer
+     *
      * @param array<mixed> $audienceAttributes
      */
     private function handlePreview(
@@ -413,7 +417,6 @@ final class Client
         $variation = $variationID ? $found_project->findVariationWithID($variationID) : null;
 
         if($variation) {
-
             $sgCookies->setAllocation($found_project, $variation);
             $sgCookies->saveTo($cookies);
         }

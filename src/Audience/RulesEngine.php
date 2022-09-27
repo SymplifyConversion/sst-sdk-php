@@ -8,18 +8,21 @@ final class RulesEngine
 {
 
     /**
+     * Checks that the given rules AST is valid. Returns null otherwise.
+     *
      * @param array<mixed> $ast
      * @return array<mixed>|null
      * @throws \Exception
      */
     public static function parse(array $ast): ?array {
 
-        $checkSyntax = RulesEngine::checkSyntax($ast);
+        $checkSyntax = self::checkSyntax($ast);
 
         if($checkSyntax)
 
             return $ast;
 
+        // this can't happen, but the compiler doesn't know that
         return null;
     }
 

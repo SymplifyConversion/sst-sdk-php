@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SymplifyConversion\SSTSDK\Audience;
 
+/**
+ * This class contains the logic for evaluating each of the primitives in audience rules.
+ */
 final class Primitives
 {
 
@@ -26,6 +29,8 @@ final class Primitives
     ];
 
     /**
+     * Apply the primitive with the given name to the given arguments, in the given environment.
+     *
      * @param array<mixed> $args
      * @param array<mixed> $environment
      * @return string|bool|numeric|array<string,string>

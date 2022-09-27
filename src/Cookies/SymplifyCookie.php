@@ -90,6 +90,10 @@ final class SymplifyCookie
     }
 
     /**
+     * Get visitor ID from the cookie.
+     *
+     * If there is none, generate a one and store it.
+     *
      * @throws \Exception
      */
     public function getVisitorID(?callable $idGenerator = null): ?string
@@ -154,6 +158,8 @@ final class SymplifyCookie
     }
 
     /**
+     * PreviewData is used by the SDK when users are previewing tests without activating them.
+     *
      * @return array<int>
      */
     public function getPreviewData(): ?array {

@@ -6,6 +6,9 @@ namespace SymplifyConversion\SSTSDK\Audience;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * SymplifyAudience contains rules to be evaluated for activating projects.
+ */
 final class SymplifyAudience
 {
 
@@ -38,6 +41,9 @@ final class SymplifyAudience
     }
 
     /**
+     * eval interprets the rules in the given environment, and returns true if
+     * the audience matches.
+     *
      * @param array<string,mixed> $environment
      * @return bool|string
      */
@@ -66,6 +72,9 @@ final class SymplifyAudience
     }
 
     /**
+     * trace interprets the rules in the given environment, and annotates each
+     * sub-expression with their partial value.
+     *
      * @param array<string,mixed> $environment
      * @return array<string,mixed>|string
      */
