@@ -114,14 +114,17 @@ server must provide the values of these attributes for each request.
 For example, you might want a test project to only apply for visitors from a
 certain country. The audience can be configured in your project, using a
 custom attribute "country", and then your server provides it when finding the
-variation:
+variation on each request:
 
 ```php
-function getDiscounts($sdk, $cookieJar) {
-    // this code assumes you have a `lookupGeoIP` helper function in your project
-    $customAttribute = array('country' => lookupGeoIp($usersIPAddress)->getCountry());
-    // `cookieJar` is an example function explained in this README
-    $gotVariation = $sdk->findVariation('Discounts, May 2022', $customAttribute, $cookieJar);
+// fictional helper function to get discounts for each request we serve
+function getDiscounts($sdk) {
+    // This code assumes you have a `lookupGeoIP` helper function in your project.
+    $customAttributes = array('country' => lookupGeoIp($usersIPAddress)->getCountry());
+
+    // Custom attributes are passed as an array of key/value pairs, in this case we set 'country'
+    // and assume the audience is configured with the "string-attribute" rule to look for specific countries.
+    $gotVariation = $sdk->findVariation('Discounts, May 2022', $customAttributes);
     
     switch ($gotVariation) {
         case 'huge':
