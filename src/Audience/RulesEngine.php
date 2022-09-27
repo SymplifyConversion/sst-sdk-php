@@ -8,7 +8,9 @@ final class RulesEngine
 {
 
     /**
-     * Checks that the given rules AST is valid. Returns null otherwise.
+     * Checks that the given rules AST is valid.
+     *
+     * Throws an exception if the rules are invalid.
      *
      * @param array<mixed> $ast
      * @return array<mixed>|null
@@ -27,6 +29,10 @@ final class RulesEngine
     }
 
     /**
+     * Parses the given JSON string into an AST.
+     *
+     * Throws an exception if the JSON or rules syntax is invalid.
+     *
      * @param string $ruleString;
      * @return array<mixed>|null
      * @throws \Exception
@@ -130,6 +136,8 @@ final class RulesEngine
     }
 
     /**
+     * Check AST syntax, throws exception if invalid.
+     *
      * @param mixed $ast
      * @throws \Exception
      */
