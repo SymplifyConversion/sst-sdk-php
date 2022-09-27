@@ -2,4 +2,4 @@
 
 set -xe
 
-./vendor/bin/phpunit tests
+./vendor/bin/phpunit --testdox tests
