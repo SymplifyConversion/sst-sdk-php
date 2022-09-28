@@ -17,6 +17,8 @@ final class SymplifyCookie
     private const JSON_COOKIE_NAME = 'sg_cookies';
     private const JSON_COOKIE_VERSION_KEY = '_g';
     private const JSON_COOKIE_VISITOR_ID_KEY = 'visid';
+    private const JSON_COOKIE_PREVIEW_PROJECT_KEY = 'pmr';
+    private const JSON_COOKIE_PREVIEW_VARIATION_KEY = 'pmv';
     private const SUPPORTED_JSON_COOKIE_VERSION = 1;
 
     /** @var array<string, mixed> */
@@ -88,6 +90,10 @@ final class SymplifyCookie
     }
 
     /**
+     * Get visitor ID from the cookie.
+     *
+     * If there is none, generate a one and store it.
+     *
      * @throws \Exception
      */
     public function getVisitorID(?callable $idGenerator = null): ?string
@@ -151,6 +157,27 @@ final class SymplifyCookie
         $this->setValue($project->id . "_ch", -1);
     }
 
+    /**
+     * PreviewData is used by the SDK when users are previewing tests without activating them.
+     *
+     * @return array<int>
+     */
+    public function getPreviewData(): ?array {
+        $projectID = $this->getValue(self::JSON_COOKIE_PREVIEW_PROJECT_KEY);
+
+        if(!is_int($projectID)){
+            return null;
+        }
+
+        $variationID = $this->getValue(self::JSON_COOKIE_PREVIEW_VARIATION_KEY);
+
+        if(!is_int($variationID)){
+            return null;
+        }
+
+        return ['projectID' => $projectID, 'variationID' => $variationID];
+    }
+
     // @phpstan-ignore-next-line
     private function getValue(string $key) // phpcs:ignore
     {
@@ -175,7 +202,7 @@ final class SymplifyCookie
         // this is a version 4 UUID
         $buf[6] = chr(ord($buf[6]) & 0x0f | 0x40);
 
-        // ...of the "Leach–Salz" variant
+        // ...of the "Leach-Salz" variant
         $buf[8] = chr(ord($buf[8]) & 0x3f | 0x80);
 
         return sprintf('%s%s-%s-%s-%s-%s%s%s', ...str_split(bin2hex($buf), 4));

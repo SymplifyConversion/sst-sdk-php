@@ -7,6 +7,7 @@ namespace SymplifyConversion\SSTSDK;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Log\LoggerInterface;
+use SymplifyConversion\SSTSDK\Audience\SymplifyAudience;
 use SymplifyConversion\SSTSDK\Config\ClientConfig;
 use SymplifyConversion\SSTSDK\Config\ProjectConfig;
 use SymplifyConversion\SSTSDK\Config\RunState;
@@ -83,6 +84,9 @@ final class Client
         $this->config = null;
     }
 
+    /**
+     * @return static
+     */
     public static function withDefaults(
         string $websiteID,
         bool $autoLoadConfig = true,
@@ -122,10 +126,16 @@ final class Client
     /**
      * Returns the name of the variation the visitor is part of in the project with the given name.
      *
+     * @param array<mixed> $customAttributes
      * @return string|null the name of the current visitor's assigned variation,
      *         null if there is no matching project or no visitor ID was found.
      */
-    public function findVariation(string $projectName, ?CookieJar $cookies = null): ?string
+    // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
+    public function findVariation(
+        string $projectName,
+        array $customAttributes = [],
+        ?CookieJar $cookies = null
+    ): ?string
     {
         try {
             if (!$this->config) {
@@ -152,6 +162,12 @@ final class Client
                 return null;
             }
 
+            // 1. if previewing a project, handle and return early
+            if(!is_null($sgCookies->getPreviewData())){
+                return $this->handlePreview($sgCookies, $foundProject, $cookies, $customAttributes);
+            }
+
+            // 2. if we already have an allocation from a previous visit, use that and return early
             $persistedVariation = $this->findVariationInCookie($foundProject, $sgCookies);
 
             if (false !== $persistedVariation) {
@@ -159,6 +175,16 @@ final class Client
                 return is_null($persistedVariation) ? null : $persistedVariation->name;
             }
 
+            // 3. no preview or variation from before: let's see if this project applies to the visitor
+            if(!is_null($foundProject->audience_rules)) {
+                $audience = new SymplifyAudience($foundProject->audience_rules, $this->logger);
+
+                if(!$this->doesAudienceApply($audience, $customAttributes)){
+                    return null;
+                }
+            }
+
+            // 4. the project audience applies, lets allocate a variation.
             $allocatedVariation = $this->allocateVariation($foundProject, $sgCookies);
 
             $this->saveAllocation($foundProject, $allocatedVariation, $sgCookies);
@@ -229,6 +255,9 @@ final class Client
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function allocateVariation(ProjectConfig $project, SymplifyCookie $sgCookies): ?VariationConfig
     {
         $visitorID = $sgCookies->getVisitorID();
@@ -346,6 +375,68 @@ final class Client
 
         // casting to read all the stream contents, we have already checked the size above
         return (string)$response->getBody();
+    }
+
+    /**
+     * We are previewing a variation,
+     * - trace the audience rules and give back in cookie
+     * - override the allocation in the cookie for the previewer
+     *
+     * @param array<mixed> $audienceAttributes
+     */
+    private function handlePreview(
+        SymplifyCookie $sgCookies,
+        ProjectConfig $found_project,
+        CookieJar $cookies,
+        array $audienceAttributes
+    ): ?string {
+        if(isset($found_project->audience_rules)){
+            $audience_rules = $found_project->audience_rules;
+
+            if(count($audience_rules)){
+                $audience = new SymplifyAudience($audience_rules, $this->logger);
+
+                $audienceTrace = $audience->trace($audienceAttributes);
+
+                if(is_string($audienceTrace)){
+                    $this->logger->warning($audienceTrace);
+
+                    return null;
+                }
+
+                $cookies->setCookie('sg_audience_trace', json_encode($audienceTrace), 1);
+
+                if(!$this->doesAudienceApply($audience, $audienceAttributes)){
+                    return null;
+                }
+            }
+        }
+
+        $variationID = $sgCookies->getPreviewData()['variationID'] ?? false;
+
+        $variation = $variationID ? $found_project->findVariationWithID($variationID) : null;
+
+        if($variation) {
+            $sgCookies->setAllocation($found_project, $variation);
+            $sgCookies->saveTo($cookies);
+        }
+
+        return $variation->name ?? null;
+    }
+
+    /**
+     * @param array<mixed> $audienceAttributes
+     */
+    private function doesAudienceApply(SymplifyAudience $audience, array $audienceAttributes): ?bool {
+        $audienceEval = $audience->eval($audienceAttributes);
+
+        if(is_string($audienceEval)){
+            $this->logger->warning('audience check failed: ' . $audienceEval);
+
+            return null;
+        }
+
+        return $audienceEval;
     }
 
 }

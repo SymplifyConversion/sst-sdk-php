@@ -16,15 +16,20 @@ final class ProjectConfig
 
     public int $state;
 
+    /** @var array<mixed> */
+    public ?array $audience_rules;
+
     /**
      * @param array<VariationConfig> $variations
+     * @param array<mixed>|null $audience_rules
      */
-    function __construct(int $id, string $name, int $state, array $variations)
+    function __construct(int $id, string $name, int $state, array $variations, ?array $audience_rules = null)
     {
         $this->id         = $id;
         $this->name       = $name;
         $this->state      = $state;
         $this->variations = $variations;
+        $this->audience_rules = $audience_rules;
     }
 
     /**
@@ -44,7 +49,9 @@ final class ProjectConfig
             $variations[] = VariationConfig::fromArray($variationData);
         }
 
-        return new ProjectConfig($id, $name, $state, $variations);
+        $audience_rules = $data['audience_rules'] ?? null;
+
+        return new ProjectConfig($id, $name, $state, $variations, $audience_rules);
     }
 
     function findVariationWithID(int $variationID): ?VariationConfig

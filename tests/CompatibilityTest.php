@@ -26,12 +26,18 @@ final class CompatibilityTest extends TestCase
         foreach ($casesData as $caseData) {
             $cases[$caseData['test_name']] = [
                 $caseData['skip'] ?? null,
+
+                // test data
                 $caseData['sdk_config'],
                 $caseData['website_id'],
                 $caseData['cookies'] ?? array(),
                 $caseData['test_project_name'],
-                $caseData['expect_variation_match'],
-                $caseData['expect_sg_cookie_properties_match'],
+                $caseData['audience_attributes'] ?? [],
+
+                // expected results
+                $caseData['expect_variation_match'] ?? null,
+                $caseData['expect_sg_cookie_properties_match'] ?? array(),
+                $caseData['expect_extra_cookies'] ?? array(),
             ];
         }
 
@@ -41,7 +47,9 @@ final class CompatibilityTest extends TestCase
     /**
      * @dataProvider compatibilityTestProvider
      * @param array<string, string> $cookies
+     * @param array<mixed>          $audience_attributes
      * @param array<mixed>          $expect_sg_cookie_properties_match
+     * @param array<string, string> $expect_extra_cookies
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
     public function testCompatibilityCase(
@@ -50,8 +58,10 @@ final class CompatibilityTest extends TestCase
         string $website_id,
         array $cookies,
         string $test_project_name,
+        array $audience_attributes,
         ?string $expect_variation_match,
-        array $expect_sg_cookie_properties_match
+        array $expect_sg_cookie_properties_match,
+        array $expect_extra_cookies
     ): void
     {
         if ($skip) {
@@ -80,7 +90,7 @@ final class CompatibilityTest extends TestCase
             $cookieJar->setCookie($cookieName, urldecode($cookieValue));
         }
 
-        $gotVariation = $sdk->findVariation($test_project_name, $cookieJar);
+        $gotVariation = $sdk->findVariation($test_project_name, $audience_attributes, $cookieJar);
 
         if (null === $expect_variation_match || null === $gotVariation) {
             self::assertEquals($expect_variation_match, $gotVariation);
@@ -88,11 +98,11 @@ final class CompatibilityTest extends TestCase
             self::assertMatchesRegularExpression("/$expect_variation_match/", $gotVariation);
         }
 
-        $cookiesAfter = json_decode($cookieJar->getCookie('sg_cookies') ?? '{}', true);
+        $sgCookiesAfter = json_decode($cookieJar->getCookie('sg_cookies') ?? '{}', true);
 
         foreach ($expect_sg_cookie_properties_match as $propertyKey => $expectProperty) {
             $parts = preg_split("_/_", "$propertyKey");
-            $prop  = $cookiesAfter;
+            $prop  = $sgCookiesAfter;
 
             do {
                 $key = array_shift($parts);
@@ -104,6 +114,11 @@ final class CompatibilityTest extends TestCase
             } else {
                 self::assertEquals($expectProperty, $prop);
             }
+        }
+
+        foreach ($expect_extra_cookies as $cookieName => $expectCookieValue) {
+            $actualCookieValue = $cookieJar->getCookie($cookieName) ?? null;
+            self::assertEquals($expectCookieValue, $actualCookieValue);
         }
     }
 
