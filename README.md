@@ -1,7 +1,7 @@
 Symplify Server-Side Testing SDK for PHP
 ========================================
 
-This is the PHP implementation of the [Symplify Server-Side Testing SDK](./docs/Server-Side_Testing.md).
+This is the PHP implementation of the [Symplify Server-Side Testing SDK](https://github.com/SymplifyConversion/sst-documentation/blob/main/docs/Server_Side_Testing.md).
 
 Due to the PHP concurrency model, the SDK is not keeping its own local cache for
 the config, there simply is no great way to organize the invalidation logic when
@@ -104,7 +104,7 @@ See more examples of code using the SDK in [examples](examples).
 ### Custom audience
 
 It's possible to limit for which requests/visitors a certain test project
-should apply by using "audience" rules. See [Audiences.md](docs/Audiences.md)
+should apply by using "audience" rules. See [Audiences.md](https://github.com/SymplifyConversion/sst-documentation/blob/main/docs/Audicences.md)
 for details.
 
 The audience is evaluated when your server calls `findVariation`, and if the

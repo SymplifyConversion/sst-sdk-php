@@ -18,7 +18,7 @@ final class CompatibilityTest extends TestCase
     // @phpstan-ignore-next-line
     public function compatibilityTestProvider(): array // phpcs:ignore
     {
-        $json      = file_get_contents(__DIR__ . "/data/test_cases.json");
+        $json      = file_get_contents("https://raw.githubusercontent.com/SymplifyConversion/sst-documentation/main/test/test_cases.json");
         $casesData = json_decode($json, true);
 
         $cases = array();
@@ -71,7 +71,7 @@ final class CompatibilityTest extends TestCase
         $messageFactory = new Psr17Factory();
         $httpClient     = new MockClient();
 
-        $configJSON   = file_get_contents(__DIR__ . "/data/$sdk_config");
+        $configJSON   = file_get_contents("https://raw.githubusercontent.com/SymplifyConversion/sst-documentation/main/test/" . $sdk_config);
         $jsonResponse = $messageFactory->createResponse(200)->withBody(Stream::create($configJSON));
         $httpClient->setDefaultResponse($jsonResponse);
 

@@ -15,7 +15,7 @@ final class AudienceTest extends TestCase
      * @return array<mixed>
      */
     public function audienceTestAttributesProvider(): array {
-        $json      = file_get_contents(__DIR__ . "/data/audience_attributes_spec.json");
+        $json      = file_get_contents('https://raw.githubusercontent.com/SymplifyConversion/sst-documentation/main/test/audience_attributes_spec.json');
         $attributesData = json_decode($json, true);
 
         $attributes = array();
@@ -34,7 +34,7 @@ final class AudienceTest extends TestCase
      * @return array<mixed>
      */
     public function audienceTestProvider(): array {
-        $json      = file_get_contents(__DIR__ . "/data/audience_spec.json");
+        $json      = file_get_contents("https://raw.githubusercontent.com/SymplifyConversion/sst-documentation/main/test/audience_spec.json");
         $audiencesData = json_decode($json, true);
         $test_cases = array();
         foreach($audiencesData as $audienceData){
@@ -53,7 +53,7 @@ final class AudienceTest extends TestCase
      * @return array<mixed>
      */
     public function audienceTestTracingProvider(): array {
-        $json      = file_get_contents(__DIR__ . "/data/audience_tracing_spec.json");
+        $json      = file_get_contents("https://raw.githubusercontent.com/SymplifyConversion/sst-documentation/main/test/audience_tracing_spec.json");
         $tracesData = json_decode($json, true);
 
         $test_cases = array();
@@ -73,7 +73,7 @@ final class AudienceTest extends TestCase
      * @return array<mixed>
      */
     public function audienceTestValidationProvider(): array {
-        $json      = file_get_contents(__DIR__ . "/data/audience_validation_spec.json");
+        $json      = file_get_contents("https://raw.githubusercontent.com/SymplifyConversion/sst-documentation/main/test/audience_validation_spec.json");
         $validationsData = json_decode($json, true);
 
         $test_cases = array();
