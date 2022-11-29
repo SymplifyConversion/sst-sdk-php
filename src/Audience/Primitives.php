@@ -167,9 +167,9 @@ final class Primitives
      */
     private static function numberFun($a, $b, callable $function, bool $isTrace = false)
     {
-        if (!is_numeric($a) || !is_numeric($b))
-
+        if ((!is_int($a) && !is_float($a) || !is_int($b) && !is_float($b))) {
             return self::isError('expected number arguments', $isTrace);
+        }
 
         return $function((float)$a, (float)$b);
     }
