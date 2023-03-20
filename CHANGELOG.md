@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- add reference in documentation to [SST-documentation](https://github.com/SymplifyConversion/sst-documentation/)
+  repository regarding cookie usage and setup
+
 ## [0.4.2] - 2022-11-29
 
 ### Changed

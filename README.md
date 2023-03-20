@@ -101,6 +101,12 @@ $sdk->loadConfig();
 
 See more examples of code using the SDK in [examples](examples).
 
+### Cookies
+
+To ensure visitors get the same variation consistently, the SDK needs to
+read and write cookies. See [SST-documentation](https://github.com/SymplifyConversion/sst-documentation/) 
+repository for general cookie setup information and [examples](examples) folder for code examples.
+
 ### Custom audience
 
 It's possible to limit for which requests/visitors a certain test project
