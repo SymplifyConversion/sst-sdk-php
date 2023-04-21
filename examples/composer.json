@@ -7,7 +7,7 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.0",
     "ext-fileinfo": "*",
     "guzzlehttp/guzzle": "7.5.1",
     "kevinrob/guzzle-cache-middleware":"v4.0.1.",
