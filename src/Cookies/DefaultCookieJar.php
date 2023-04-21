@@ -34,14 +34,7 @@ final class DefaultCookieJar implements CookieJar
     {
         $expireTime = time() + $expireInDays * 60 * 60 * 24;
 
-        setcookie(
-            $name,
-            $value,
-            $expireTime,
-            '/',
-            $this->cookieDomain ?? '',
-            true
-        );
+        setcookie($name, $value, $expireTime, '/', $this->cookieDomain ?? '', true);
     }
 
 }
