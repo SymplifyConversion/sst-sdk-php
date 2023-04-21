@@ -107,6 +107,27 @@ To ensure visitors get the same variation consistently, the SDK needs to
 read and write cookies. See [SST-documentation](https://github.com/SymplifyConversion/sst-documentation/) 
 repository for general cookie setup information and [examples](examples) folder for code examples.
 
+If you do not have a CookieJar class already, it is advised to use the SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar class.
+
+```php
+<?php
+
+use SymplifyConversion\SSTSDK\Client as SymplifyClient;
+use SymplifyConversion\SSTSDK\Cookies\DefaultCookieJar;
+
+$websiteID  = "4711";
+$cookieDomain = getenv('SSTSDK_COOKIE_DOMAIN');
+
+$client = SymplifyClient::withDefaults($websiteID);
+$cookieJar = new DefaultCookieJar($cookieDomain);
+
+foreach ($client->listProjects() as $projectName) {
+    echo " * $projectName" . PHP_EOL;
+    $variationName = $client->findVariation($projectName, [], $cookieJar);
+    echo "   - assigned variation: " . $variationName . PHP_EOL;
+}
+```
+
 ### Custom audience
 
 It's possible to limit for which requests/visitors a certain test project

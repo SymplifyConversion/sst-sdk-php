@@ -10,7 +10,7 @@ final class DefaultCookieJar implements CookieJar
     private ?string $cookieDomain;
 
     /**
-     * @param string $cookieDomain set this if you need to write Symplify cookies
+     * @param string|null $cookieDomain set this if you need to write Symplify cookies
      * on some other domain than what PHP defaults to.
      */
     public function __construct(?string $cookieDomain = null)
@@ -32,14 +32,16 @@ final class DefaultCookieJar implements CookieJar
      */
     public function setCookie(string $name, string $value, int $expireInDays): void
     {
-        $options = array();
-        $options['expires'] = time() + $expireInDays * 60 * 60 * 24;
+        $expireTime = time() + $expireInDays * 60 * 60 * 24;
 
-        if (!is_null($this->cookieDomain)) {
-            $options['domain'] = $this->cookieDomain;
-        }
-
-        setcookie($name, $value, $options);
+        setcookie(
+            $name,
+            $value,
+            $expireTime,
+            '/',
+            $this->cookieDomain ?? '',
+            true
+        );
     }
 
 }
