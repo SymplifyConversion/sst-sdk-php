@@ -72,7 +72,7 @@ It is now located in [SST-documentations docs folder](https://github.com/Symplif
   - use PSR-3 for logging
   - use PSR-17,PSR-18 for configuration download
 
-[Unreleased]: https://github.com/SymplifyConversion/sst-sdk-php/compare/v0.4.3...HEAD
+[Unreleased]: https://github.com/SymplifyConversion/sst-sdk-php/compare/v0.5.0...HEAD
 [0.5.0]: https://github.com/SymplifyConversion/sst-sdk-php/releases/tag/v0.5.0
 [0.4.3]: https://github.com/SymplifyConversion/sst-sdk-php/releases/tag/v0.4.3
 [0.4.2]: https://github.com/SymplifyConversion/sst-sdk-php/releases/tag/v0.4.2
