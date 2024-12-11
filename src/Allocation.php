@@ -32,7 +32,7 @@ final class Allocation
         $pointer = 0;
 
         foreach ($project->variations as $variationConfig) {
-            $pointer += ($variationConfig->distribution > 0) 
+            $pointer += $variationConfig->distribution > 0 
             ? $variationConfig->distribution : $variationConfig->weight;
 
             if ($hash <= $pointer) {
