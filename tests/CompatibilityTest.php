@@ -71,7 +71,12 @@ final class CompatibilityTest extends TestCase
         $messageFactory = new Psr17Factory();
         $httpClient     = new MockClient();
 
-        $configJSON   = file_get_contents("https://raw.githubusercontent.com/SymplifyConversion/sst-documentation/main/test/" . $sdk_config);
+        $url = "https://raw.githubusercontent.com/SymplifyConversion/sst-documentation/main/test/";
+
+        // if you want to do changes to the configs locally use the below $localDirectory instead of the $url
+        $localDirectory = "examples/cdn/4711/";
+
+        $configJSON   = file_get_contents($url . $sdk_config);
         $jsonResponse = $messageFactory->createResponse(200)->withBody(Stream::create($configJSON));
         $httpClient->setDefaultResponse($jsonResponse);
 
@@ -109,8 +114,8 @@ final class CompatibilityTest extends TestCase
                 $prop = $prop[$key] ?? (0 < count($parts) ? [] : null);
             } while (0 < count($parts));
 
-            if ("string" === gettype($expectProperty)) {
-                self::assertMatchesRegularExpression("_${expectProperty}_", $prop);
+            if (is_string($expectProperty)) {
+                self::assertMatchesRegularExpression("_" . $expectProperty . "_", $prop);
             } else {
                 self::assertEquals($expectProperty, $prop);
             }
