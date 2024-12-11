@@ -22,13 +22,43 @@ const ALLOCATION_TEST_PROJECT_JSON = '
                     "id": 42,
                     "name": "original",
                     "state": "active",
-                    "weight": 67
+                    "weight": 67,
+                    "distribution": 66.66
                 },
                 {
                     "id": 1337,
                     "name": "massive",
                     "state": "active",
-                    "weight": 33
+                    "weight": 33,
+                    "distribution": 33.33
+                }
+            ]
+        },
+        {
+            "id": 4712,
+            "name": "test distribution",
+            "state": "active",
+            "variations": [
+                {
+                    "id": 101,
+                    "name": "Original",
+                    "state": "active",
+                    "weight": 33,
+                    "distribution": 33.33
+                },
+                {
+                    "id": 102,
+                    "name": "Variation 1",
+                    "state": "active",
+                    "weight": 33,
+                    "distribution": 33.33
+                },
+                {
+                    "id": 103,
+                    "name": "Variation 2",
+                    "state": "active",
+                    "weight": 33,
+                    "distribution": 33.33
                 }
             ]
         }
@@ -41,14 +71,17 @@ const ALLOCATION_TEST_PROJECT_JSON = '
  */
 final class AllocationTest extends TestCase
 {
-    var ProjectConfig $testProject;
+    private ProjectConfig $testProject;
+    private ProjectConfig $testProject2;
 
     // @phpstan-ignore-next-line
     public function __construct(?string $name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->testProject = SymplifyConfig::fromJson(ALLOCATION_TEST_PROJECT_JSON)->projects[0];
+        $websiteConfig = SymplifyConfig::fromJson(ALLOCATION_TEST_PROJECT_JSON);
+        $this->testProject = $websiteConfig->projects[0];
+        $this->testProject2 = $websiteConfig->projects[1];
     }
 
     public function testAllocateIsWeighted(): void
@@ -61,6 +94,12 @@ final class AllocationTest extends TestCase
     {
         $variation = Allocation::findVariationForVisitor($this->testProject, "Fabian");
         self::assertEquals(1337, $variation->id);
+    }
+
+    public function testAllocateWithDistributionValue(): void
+    {
+        $variation = Allocation::findVariationForVisitor($this->testProject2, "9bcce9b5-3a50-4019-9ee4-0085a4eb55ad");
+        self::assertEquals(102, $variation->id);
     }
 
     public function testAllocateEmptyVisitorID(): void
@@ -77,11 +116,13 @@ final class AllocationTest extends TestCase
                     'Original',
                     RunState::ACTIVE,
                     1,
+                    1,
                 ),
                 new VariationConfig(
                     $variationID,
                     'Variation',
                     RunState::ACTIVE,
+                    99,
                     99,
                 ),
             ]

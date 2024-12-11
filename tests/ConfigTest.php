@@ -20,17 +20,20 @@ const CONFIG_JSON_DISCOUNT = '
                 {
                     "id": 42,
                     "name": "original",
-                    "weight": 10
+                    "weight": 10,
+                    "distribution": 10
                 },
                 {
                     "id": 1337,
                     "name": "huge",
-                    "weight": 2
+                    "weight": 2,
+                    "distribution": 2
                 },
                 {
                     "id": 9999,
                     "name": "small",
-                    "weight": 1
+                    "weight": 1,
+                    "distribution": 1
                 }
             ]
         }
@@ -49,17 +52,20 @@ const CONFIG_JSON_WITH_FLOAT_WEIGHTS = '
                 {
                     "id": 42,
                     "name": "original",
-                    "weight": 10.99
+                    "weight": 10.99,
+                    "distribution": 10.99
                 },
                 {
                     "id": 1337,
                     "name": "huge",
-                    "weight": 2.9
+                    "weight": 2.9,
+                    "distribution": 2.9
                 },
                 {
                     "id": 9999,
                     "name": "small",
-                    "weight": 1.9
+                    "weight": 1.9,
+                    "distribution": 1.9
                 }
             ]
         }
@@ -78,17 +84,20 @@ const CONFIG_JSON_WITH_BOM = "\xEF\xBB\xBF" . '
                 {
                     "id": 42,
                     "name": "original",
-                    "weight": 10
+                    "weight": 10,
+                    "distribution": 10
                 },
                 {
                     "id": 1337,
                     "name": "huge",
-                    "weight": 2
+                    "weight": 2,
+                    "distribution": 2
                 },
                 {
                     "id": 9999,
                     "name": "small",
-                    "weight": 1
+                    "weight": 1,
+                    "distribution": 1
                 }
             ]
         }
@@ -106,17 +115,20 @@ const CONFIG_JSON_MISSING_ROOT_PROPERTY = '
                 {
                     "id": 42,
                     "name": "original",
-                    "weight": 10
+                    "weight": 10,
+                    "distribution": 10
                 },
                 {
                     "id": 1337,
                     "name": "huge",
-                    "weight": 2
+                    "weight": 2,
+                    "distribution": 2
                 },
                 {
                     "id": 9999,
                     "name": "small",
-                    "weight": 1
+                    "weight": 1,
+                    "distribution": 1
                 }
             ]
         }
@@ -134,17 +146,20 @@ const CONFIG_JSON_MISSING_PROJECT_PROPERTY = '
                 {
                     "id": 42,
                     "name": "original",
-                    "weight": 10
+                    "weight": 10,
+                    "distribution": 10
                 },
                 {
                     "id": 1337,
                     "name": "huge",
-                    "weight": 2
+                    "weight": 2,
+                    "distribution": 2
                 },
                 {
                     "id": 9999,
                     "name": "small",
-                    "weight": 1
+                    "weight": 1,
+                    "distribution": 1
                 }
             ]
         }
@@ -163,12 +178,14 @@ const CONFIG_JSON_MISSING_VARIATION_PROPERTY = '
                 {
                     "id": 42,
                     "name": "original",
-                    "weight": 10
+                    "weight": 10,
+                    "distribution": 10
                 },
                 {
                     "id": 1337,
                     "name": "huge",
-                    "weight": 2
+                    "weight": 2,
+                    "distribution": 2
                 },
                 {
                     "id": 9999,
@@ -208,7 +225,9 @@ final class ConfigTest extends TestCase
         assertEquals(1, $testVariationSmall->weight);
     }
 
-    public function testFloatWeightsAreFloored(): void
+    // this is deprecated as we will phase out weight and use distribution values instead
+    // I updated it to check distribution as well
+    public function testFloatWeightsAreFlooredForWeightNotDistribution(): void
     {
         $testConfig = SymplifyConfig::fromJSON(CONFIG_JSON_WITH_FLOAT_WEIGHTS);
         assertEquals(1648466732, $testConfig->updated);
@@ -221,16 +240,19 @@ final class ConfigTest extends TestCase
         assertEquals(42, $testVariationOriginal->id);
         assertEquals('original', $testVariationOriginal->name);
         assertEquals(10, $testVariationOriginal->weight);
+        assertEquals(10.99, $testVariationOriginal->distribution);
 
         $testVariationHuge = $testProject->variations[1];
         assertEquals(1337, $testVariationHuge->id);
         assertEquals('huge', $testVariationHuge->name);
         assertEquals(2, $testVariationHuge->weight);
+        assertEquals(2.9, $testVariationHuge->distribution);
 
         $testVariationSmall = $testProject->variations[2];
         assertEquals(9999, $testVariationSmall->id);
         assertEquals('small', $testVariationSmall->name);
         assertEquals(1, $testVariationSmall->weight);
+        assertEquals(1.9, $testVariationSmall->distribution);
     }
 
     public function testCanBeCreatedFromValidJSONWithBOM(): void

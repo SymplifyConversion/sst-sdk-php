@@ -13,15 +13,18 @@ final class VariationConfig
 
     /** @var int relative variation weight */
     public int $weight;
-
+    
     public int $state;
 
-    function __construct(int $id, string $name, int $state, int $weight)
+    public float $distribution;
+
+    function __construct(int $id, string $name, int $state, int $weight, float $distribution)
     {
         $this->id     = $id;
         $this->name   = $name;
         $this->state  = $state;
         $this->weight = $weight;
+        $this->distribution = $distribution;
     }
 
     /**
@@ -34,8 +37,9 @@ final class VariationConfig
         $name   = $data['name'] ?? '';
         $weight = $data['weight'] ?? 1;
         $state  = RunState::fromString($data['state'] ?? null);
+        $distribution = $data['distribution'] ?? 0;
 
-        return new VariationConfig($id, $name, $state, (int)$weight);
+        return new VariationConfig($id, $name, $state, (int)$weight, $distribution);
     }
 
 }

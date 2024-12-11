@@ -6,9 +6,9 @@
       "id": 1001,
       "name": "test project",
       "variations": [
-        { "id": 10011, "name": "Original", "weight": 25, "state": "active" },
-        { "id": 10012, "name": "paused variation 1", "weight": 25, "state": "paused" },
-        { "id": 10013, "name": "active variation 2", "weight": 25, "state": "active" }
+        { "id": 10011, "name": "Original", "weight": 25, "distribution": 25, "state": "active" },
+        { "id": 10012, "name": "paused variation 1", "weight": 25, "distribution": 25, "state": "paused" },
+        { "id": 10013, "name": "active variation 2", "weight": 25, "distribution": 25, "state": "active" }
       ],
       "state": "active"
     },
@@ -16,8 +16,8 @@
       "id": 1002,
       "name": "all active",
       "variations": [
-        { "id": 10021, "name": "Original", "weight": 50, "state": "active" },
-        { "id": 10022, "name": "Variation 1", "weight": 50, "state": "active" }
+        { "id": 10021, "name": "Original", "weight": 50, "distribution": 50, "state": "active" },
+        { "id": 10022, "name": "Variation 1", "weight": 50, "distribution": 50, "state": "active" }
       ],
       "state": "active"
     },
@@ -25,8 +25,8 @@
       "id": 1003,
       "name": "no allocations",
       "variations": [
-        { "id": 10031, "name": "Original", "weight": 0, "state": "active" },
-        { "id": 10032, "name": "Variation 1", "weight": 0, "state": "paused" }
+        { "id": 10031, "name": "Original", "weight": 0, "distribution": 0, "state": "active" },
+        { "id": 10032, "name": "Variation 1", "weight": 0, "distribution": 0, "state": "paused" }
       ],
       "state": "active"
     },
@@ -34,8 +34,8 @@
       "id": 1004,
       "name": "paused project",
       "variations": [
-        { "id": 10041, "name": "Original", "weight": 0, "state": "active" },
-        { "id": 10042, "name": "Variation 1", "weight": 0, "state": "paused" }
+        { "id": 10041, "name": "Original", "weight": 0, "distribution": 0, "state": "active" },
+        { "id": 10042, "name": "Variation 1", "weight": 0, "distribution": 0, "state": "paused" }
       ],
       "state": "paused"
     },
@@ -44,7 +44,7 @@
       "name": "custom audience",
       "audience_rules": ["equals", ["string-attribute", "foo"], "bar"],
       "variations": [
-        { "id": 10051, "name": "Original", "weight": 100, "state": "active" }
+        { "id": 10051, "name": "Original", "weight": 100, "distribution": 100, "state": "active" }
       ],
       "state": "active"
     }
