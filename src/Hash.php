@@ -14,7 +14,7 @@ final class Hash
      * @param int $window the maximum value (inclusive) to scale the hash to
      * @return int a value between 1 and $window
      */
-    public static function hash_in_window(string $key, int $window): int
+    public static function hash_in_window(string $key, int $window): float
     {
         $unsignedMax = 4_294_967_295;
 
@@ -22,7 +22,7 @@ final class Hash
 
         // scale $h to the desired window
         $h /= $unsignedMax;                // scale to fit [0,1]
-        $h = (int)ceil($h * $window); // scale to window
+        $h = $h * $window; // scale to window
 
         return $h;
     }

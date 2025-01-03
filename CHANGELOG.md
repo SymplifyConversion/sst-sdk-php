@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0] - 2022-06-23
+## [1.0.1] - 2025-01-03
+### Fixed
+- Removed ceil in allocation
+
+## [1.0.0] - 2024-12-11
 ### Added
 - Support for distribution value to get better precision on allocations
 - Added tests for distribution
@@ -78,7 +82,8 @@ It is now located in [SST-documentations docs folder](https://github.com/Symplif
   - use PSR-3 for logging
   - use PSR-17,PSR-18 for configuration download
 
-[Unreleased]: https://github.com/SymplifyConversion/sst-sdk-php/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/SymplifyConversion/sst-sdk-php/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/SymplifyConversion/sst-sdk-php/releases/tag/v1.0.1
 [1.0.0]: https://github.com/SymplifyConversion/sst-sdk-php/releases/tag/v1.0.0
 [0.5.0]: https://github.com/SymplifyConversion/sst-sdk-php/releases/tag/v0.5.0
 [0.4.3]: https://github.com/SymplifyConversion/sst-sdk-php/releases/tag/v0.4.3
