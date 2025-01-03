@@ -22,7 +22,7 @@ final class Hash
 
         // scale $h to the desired window
         $h /= $unsignedMax;                // scale to fit [0,1]
-        $h = $h * $window; // scale to window
+        $h *= $window; // scale to window
 
         return $h;
     }
