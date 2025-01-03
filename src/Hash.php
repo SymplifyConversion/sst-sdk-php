@@ -12,7 +12,7 @@ final class Hash
      *
      * @param string $key the string to be hashed
      * @param int $window the maximum value (inclusive) to scale the hash to
-     * @return int a value between 1 and $window
+     * @return float a value between 1 and $window
      */
     public static function hash_in_window(string $key, int $window): float
     {
