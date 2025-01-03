@@ -21,27 +21,27 @@ final class HashTest extends TestCase
 
     public function testHashInWindow(): void
     {
-        assertEquals(6, Hash::hash_in_window("Fabian", 10), "hashInWindow is not random");
-        assertEquals(586, Hash::hash_in_window("Fabian", 1_000), "hashInWindow can scale up");
-        assertEquals(2, Hash::hash_in_window("Fabian", 2), "hashInWindow can scale down");
+        assertEquals(5.857811287478034, Hash::hash_in_window("Fabian", 10), "hashInWindow is not random");
+        assertEquals(585.7811287478035, Hash::hash_in_window("Fabian", 1_000), "hashInWindow can scale up");
+        assertEquals(1.1715622574956068, Hash::hash_in_window("Fabian", 2), "hashInWindow can scale down");
 
         assertEquals(
-            1,
+            0.6382114774636486,
             Hash::hash_in_window("9e66a7fa-984a-4681-9319-80c2be2ffe8a", 3),
             "hashInWindow is distributed 1",
         );
         assertEquals(
-            2,
+            1.1311826156757732,
             Hash::hash_in_window("72784e9c-f5ae-4aed-8ae7-baa9c6e31d3c", 3),
             "hashInWindow is distributed 2",
         );
         assertEquals(
-            3,
+            2.352266755269903,
             Hash::hash_in_window("cc615f71-1ab8-4322-b7d7-e10294a8d483", 3),
             "hashInWindow is distributed 3",
         );
         assertEquals(
-            57,
+            56.05795827136794,
             Hash::hash_in_window("b7850777-f581-4f66-ad3e-4e54963661df", 100),
             "hashInWindow is compatible",
         );

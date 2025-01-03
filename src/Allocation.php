@@ -35,7 +35,7 @@ final class Allocation
             $pointer += $variationConfig->distribution > 0 
             ? $variationConfig->distribution : $variationConfig->weight;
 
-            if ($hash <= $pointer) {
+            if ($hash < $pointer) {
                 return RunState::ACTIVE === $variationConfig->state ? $variationConfig : null;
             }
         }
