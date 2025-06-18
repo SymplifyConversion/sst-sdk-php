@@ -6,6 +6,7 @@ namespace SymplifyConversion\SSTSDK;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
+use Stringable;
 
 final class ErrorLogLogger extends AbstractLogger
 {
@@ -24,7 +25,7 @@ final class ErrorLogLogger extends AbstractLogger
         fclose($stderr);
     }
 
-    public function log($level, $message, array $context = []): void // phpcs:ignore
+    public function log($level, string | Stringable $message, array $context = []): void // phpcs:ignore
     {
         $pre = $post = '';
 

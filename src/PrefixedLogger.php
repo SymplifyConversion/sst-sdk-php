@@ -6,6 +6,7 @@ namespace SymplifyConversion\SSTSDK;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
+use Stringable;
 
 /**
  * Wraps any logger to prefix each message.
@@ -25,7 +26,7 @@ final class PrefixedLogger extends AbstractLogger
         $this->wrapped = $wrapped;
     }
 
-    public function log($level, $message, array $context = []): void // phpcs:ignore
+    public function log($level, string | Stringable $message, array $context = []): void // phpcs:ignore
     {
         $this->wrapped->log($level, $this->prefix . $message, $context);
     }
