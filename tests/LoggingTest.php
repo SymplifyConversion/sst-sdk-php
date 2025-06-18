@@ -80,7 +80,7 @@ final class LogSpy extends AbstractLogger
         $this->seenMessages = [];
     }
 
-    public function log($level, string | Stringable $message, array $context = array()):void // phpcs:ignore
+    public function log($level, string|\Stringable $message, array $context = array()):void // phpcs:ignore
     {
         if ($level !== $this->spyLevel) {
             return;

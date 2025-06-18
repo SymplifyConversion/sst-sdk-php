@@ -25,7 +25,7 @@ final class ErrorLogLogger extends AbstractLogger
         fclose($stderr);
     }
 
-    public function log($level, string | Stringable $message, array $context = []): void // phpcs:ignore
+    public function log($level, string|\Stringable $message, array $context = []): void // phpcs:ignore
     {
         $pre = $post = '';
 
