@@ -46,7 +46,11 @@
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "php-http/discovery": true
+    },
+    "platform": {
+      "php": "8.1.0"
     }
+
   },
   "scripts": {
     "phpcs": "phpcs src"
