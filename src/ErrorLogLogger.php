@@ -6,7 +6,6 @@ namespace SymplifyConversion\SSTSDK;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
-use Stringable;
 
 final class ErrorLogLogger extends AbstractLogger
 {

@@ -6,7 +6,6 @@ namespace SymplifyConversion\SSTSDK;
 
 use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerInterface;
-use Stringable;
 
 /**
  * Wraps any logger to prefix each message.
