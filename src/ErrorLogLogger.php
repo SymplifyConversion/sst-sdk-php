@@ -32,7 +32,7 @@ final class ErrorLogLogger extends AbstractLogger
             $post = "\033[0m";
         }
 
-        error_log($pre . sprintf("[%s] %s", strtoupper($level), (string) self::interpolate($message, $context)) . $post);
+        error_log($pre . sprintf("[%s] %s", strtoupper($level), self::interpolate($message, $context)) . $post);
     }
 
     public static function colorCode(string $level): string
