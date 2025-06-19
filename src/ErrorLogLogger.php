@@ -76,6 +76,6 @@ final class ErrorLogLogger extends AbstractLogger
             $replace['{' . $key . '}'] = strval($val);
         }
 
-        return strtr($message, $replace);
+        return strtr((string) $message, $replace);
     }
 }
