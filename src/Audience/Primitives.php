@@ -36,7 +36,7 @@ final class Primitives
      * @throws \Exception
      */
     // phpcs:ignore SlevomatCodingStandard.Functions.FunctionLength.FunctionLength
-    public static function PrimitiveFunction(string $primitive, array $args, array $environment, bool $isTrace = false)
+    public static function primitiveFunction(string $primitive, array $args, array $environment, bool $isTrace = false)
     {
         // when tracing, we emulate exceptions by bubbling errors up in the expression
         foreach ($args as $arg) {
@@ -152,7 +152,7 @@ final class Primitives
      * @return bool|array<mixed>
      * @throws \Exception
      */
-    private static function stringFun($a, $b, callable $function, bool $isTrace = false)
+    public static function stringFun($a, $b, callable $function, bool $isTrace = false)
     {
         if (!is_string($a) || !is_string($b)) {
             return self::isError('expected string arguments', $isTrace);
@@ -167,7 +167,7 @@ final class Primitives
      * @return bool|array<mixed>
      * @throws \Exception
      */
-    private static function numberFun($a, $b, callable $function, bool $isTrace = false)
+    public static function numberFun($a, $b, callable $function, bool $isTrace = false)
     {
         if ((!is_int($a) && !is_float($a) || !is_int($b) && !is_float($b))) {
             return self::isError('expected number arguments', $isTrace);

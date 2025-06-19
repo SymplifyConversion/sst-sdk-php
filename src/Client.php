@@ -54,7 +54,7 @@ final class Client
      * @throws \InvalidArgumentException if $cdnBaseURL is not a URL, or has no scheme or host.
      * @throws \InvalidArgumentException if an HTTP client is given without a corresponding request factory.
      */
-    function __construct(ClientConfig $clientConfig)
+    public function __construct(ClientConfig $clientConfig)
     {
         $cdnBaseURL   = $clientConfig->getCdnBaseURL();
         $httpClient   = $clientConfig->getHttpClient();
@@ -100,7 +100,7 @@ final class Client
         return $client;
     }
 
-    function getConfigURL(): string
+    public function getConfigURL(): string
     {
         return "$this->cdnBaseURL/$this->websiteID/sstConfig.json";
     }
@@ -423,7 +423,7 @@ final class Client
     /**
      * @param array<mixed> $audienceAttributes
      */
-    private function doesAudienceApply(SymplifyAudience $audience, array $audienceAttributes): ?bool
+    public function doesAudienceApply(SymplifyAudience $audience, array $audienceAttributes): ?bool
     {
         $audienceEval = $audience->eval($audienceAttributes);
 

@@ -38,7 +38,7 @@ final class ClientConfig
      * @param string      $websiteID your website ID
      * @param string|null $cookieDomain set to override the domain for Symplify cookie writing
      */
-    function __construct(string $websiteID, ?string $cookieDomain = null)
+    public function __construct(string $websiteID, ?string $cookieDomain = null)
     {
         $this->websiteID        = $websiteID;
         $this->cdnBaseURL       = self::DEFAULT_CDN_BASEURL;

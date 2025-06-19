@@ -26,7 +26,7 @@ final class Allocation
         }
 
         $hashKey = "$visitorID:$project->id";
-        $hash    = Hash::hash_in_window($hashKey, 100);
+        $hash    = Hash::hashInWindow($hashKey, 100);
 
         $pointer = 0;
 

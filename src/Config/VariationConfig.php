@@ -17,7 +17,7 @@ final class VariationConfig
 
     public float $distribution;
 
-    function __construct(int $id, string $name, int $state, int $weight, float $distribution)
+    public function __construct(int $id, string $name, int $state, int $weight, float $distribution)
     {
         $this->id     = $id;
         $this->name   = $name;

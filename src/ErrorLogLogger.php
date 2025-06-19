@@ -35,7 +35,7 @@ final class ErrorLogLogger extends AbstractLogger
         error_log($pre . sprintf("[%s] %s", strtoupper($level), (string) self::interpolate($message, $context)) . $post);
     }
 
-    static function colorCode(string $level): string
+    public static function colorCode(string $level): string
     {
         switch ($level) {
             case LogLevel::EMERGENCY:
@@ -60,7 +60,7 @@ final class ErrorLogLogger extends AbstractLogger
      *
      * @param array<mixed> $context
      */
-    static function interpolate(string $message, array $context): string
+    public static function interpolate(string $message, array $context): string
     {
         $replace = [];
 

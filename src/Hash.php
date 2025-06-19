@@ -13,11 +13,11 @@ final class Hash
      * @param int $window the maximum value (inclusive) to scale the hash to
      * @return float a value between 1 and $window
      */
-    public static function hash_in_window(string $key, int $window): float
+    public static function hashInWindow(string $key, int $window): float
     {
         $unsignedMax = 4_294_967_295;
 
-        $h = self::djb2_xor($key);
+        $h = self::djb2Xor($key);
 
         // scale $h to the desired window
         $h /= $unsignedMax;                // scale to fit [0,1]
@@ -32,7 +32,7 @@ final class Hash
      * The algorithm: http://www.cse.yorku.ca/%7Eoz/hash.html
      * Why we picked it: https://softwareengineering.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
      */
-    public static function djb2_xor(string $str): int
+    public static function djb2Xor(string $str): int
     {
         $hash   = 5_381;
         $length = strlen($str);

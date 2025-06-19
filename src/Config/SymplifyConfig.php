@@ -18,7 +18,7 @@ final class SymplifyConfig
     /**
      * @param array<ProjectConfig> $projects
      */
-    function __construct(int $updated, int $privacyMode, array $projects)
+    public function __construct(int $updated, int $privacyMode, array $projects)
     {
         $this->updated     = $updated;
         $this->privacyMode = $privacyMode;
@@ -60,7 +60,7 @@ final class SymplifyConfig
         return self::fromArray($data);
     }
 
-    function findProjectWithName(string $projectName): ?ProjectConfig
+    public function findProjectWithName(string $projectName): ?ProjectConfig
     {
         foreach ($this->projects as $project) {
             if ($project->name === $projectName) {

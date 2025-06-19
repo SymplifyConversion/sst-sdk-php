@@ -121,7 +121,7 @@ final class RulesEngine
      * @return bool|float|int|string|array<string>
      * @throws \Exception
      */
-    static function evalApply(string $car, array $cdr, array $environment, bool $isTrace = false)
+    public static function evalApply(string $car, array $cdr, array $environment, bool $isTrace = false)
     {
         if (!in_array($car, Primitives::PRIMITIVES, true)) {
             throw new \Exception(sprintf('%s is not a primitive', $car));
@@ -133,7 +133,7 @@ final class RulesEngine
             $evaledArgs[] = self::evaluate($arg, $environment, $isTrace);
         }
 
-        return Primitives::PrimitiveFunction($car, $evaledArgs, $environment, $isTrace);
+        return Primitives::primitiveFunction($car, $evaledArgs, $environment, $isTrace);
     }
 
     /**

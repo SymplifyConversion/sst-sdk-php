@@ -22,7 +22,7 @@ final class ProjectConfig
      * @param array<VariationConfig> $variations
      * @param array<mixed>|null $audience_rules
      */
-    function __construct(int $id, string $name, int $state, array $variations, ?array $audience_rules = null)
+    public function __construct(int $id, string $name, int $state, array $variations, ?array $audience_rules = null)
     {
         $this->id         = $id;
         $this->name       = $name;
@@ -53,7 +53,7 @@ final class ProjectConfig
         return new ProjectConfig($id, $name, $state, $variations, $audience_rules);
     }
 
-    function findVariationWithID(int $variationID): ?VariationConfig
+    public function findVariationWithID(int $variationID): ?VariationConfig
     {
         foreach ($this->variations as $variation) {
             if ($variation->id === $variationID) {
@@ -64,7 +64,7 @@ final class ProjectConfig
         return null;
     }
 
-    function findVariationWithName(string $variationName): ?VariationConfig
+    public function findVariationWithName(string $variationName): ?VariationConfig
     {
         foreach ($this->variations as $variation) {
             if ($variation->name === $variationName) {
