@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Bumped version for psr/log
 - Dropped support for PHP 8.0
+- Updated phpcs defaults
 
 ## [1.0.1] - 2025-01-03
 ### Fixed
