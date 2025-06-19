@@ -6,14 +6,13 @@ namespace SymplifyConversion\SSTSDK\Config;
 
 final class VariationConfig
 {
-
     public int $id;
 
     public string $name;
 
     /** @var int relative variation weight */
     public int $weight;
-    
+
     public int $state;
 
     public float $distribution;
@@ -41,5 +40,4 @@ final class VariationConfig
 
         return new VariationConfig($id, $name, $state, (int)$weight, $distribution);
     }
-
 }

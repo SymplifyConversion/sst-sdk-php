@@ -6,7 +6,6 @@ namespace SymplifyConversion\SSTSDK\Cookies;
 
 interface CookieJar
 {
-
     /**
      * Get the HTTP cookie from the current request with the given name.
      * The result should be URL decoded.
@@ -20,5 +19,4 @@ interface CookieJar
      * The cookie value should be URL encoded.
      */
     public function setCookie(string $name, string $value, int $expireInDays): void;
-
 }

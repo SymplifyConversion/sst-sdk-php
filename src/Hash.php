@@ -6,7 +6,6 @@ namespace SymplifyConversion\SSTSDK;
 
 final class Hash
 {
-
     /**
      * See the docs for an explanation of the variation assignment algorithm.
      *
@@ -45,5 +44,4 @@ final class Hash
 
         return $hash;
     }
-
 }

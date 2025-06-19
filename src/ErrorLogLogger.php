@@ -9,7 +9,6 @@ use Psr\Log\LogLevel;
 
 final class ErrorLogLogger extends AbstractLogger
 {
-
     private const ANSI_RED = 31;
     private const ANSI_GREEN = 32;
     private const ANSI_YELLOW = 33;
@@ -79,5 +78,4 @@ final class ErrorLogLogger extends AbstractLogger
 
         return strtr($message, $replace);
     }
-
 }

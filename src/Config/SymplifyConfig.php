@@ -6,7 +6,6 @@ namespace SymplifyConversion\SSTSDK\Config;
 
 final class SymplifyConfig
 {
-
     /** Unix timestamp when this config was last updated */
     public int $updated;
 
@@ -71,5 +70,4 @@ final class SymplifyConfig
 
         return null;
     }
-
 }

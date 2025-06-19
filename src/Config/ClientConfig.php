@@ -11,7 +11,6 @@ use Psr\Log\NullLogger;
 
 final class ClientConfig
 {
-
     private const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
 
     /** @var string $websiteID the ID of the website you run tests on */
@@ -138,5 +137,4 @@ final class ClientConfig
     {
         return $this->cookieDomain;
     }
-
 }

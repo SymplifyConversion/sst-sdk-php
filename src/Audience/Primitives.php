@@ -9,7 +9,6 @@ namespace SymplifyConversion\SSTSDK\Audience;
  */
 final class Primitives
 {
-
     public const PRIMITIVES = [
         'not',
         'all',
@@ -47,8 +46,11 @@ final class Primitives
         }
 
         if (!in_array($primitive, self::PRIMITIVES, true)) {
-            return self::isError(sprintf('Primitive %s is not a valid primitive. Available primitives are: %s',
-                $primitive, implode(',', self::PRIMITIVES)), $isTrace);
+            return self::isError(sprintf(
+                'Primitive %s is not a valid primitive. Available primitives are: %s',
+                $primitive,
+                implode(',', self::PRIMITIVES)
+            ), $isTrace);
         }
 
         switch ($primitive) {
@@ -152,9 +154,9 @@ final class Primitives
      */
     private static function stringFun($a, $b, callable $function, bool $isTrace = false)
     {
-        if (!is_string($a) || !is_string($b))
-
+        if (!is_string($a) || !is_string($b)) {
             return self::isError('expected string arguments', $isTrace);
+        }
 
         return $function($a, $b);
     }
@@ -246,5 +248,4 @@ final class Primitives
 
         throw new \Exception($message);
     }
-
 }

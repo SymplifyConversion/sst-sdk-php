@@ -10,7 +10,6 @@ use SymplifyConversion\SSTSDK\Config\VariationConfig;
 
 final class Allocation
 {
-
     /**
      * Get the variation in the given project that the given visitor ID is allocated for.
      * The allocation is the same given the same project ID, visitor ID, variation IDs, variation order,
@@ -32,7 +31,7 @@ final class Allocation
         $pointer = 0;
 
         foreach ($project->variations as $variationConfig) {
-            $pointer += $variationConfig->distribution > 0 
+            $pointer += $variationConfig->distribution > 0
             ? $variationConfig->distribution : $variationConfig->weight;
 
             if ($hash < $pointer) {
@@ -42,5 +41,4 @@ final class Allocation
 
         return null;
     }
-
 }

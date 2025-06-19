@@ -6,7 +6,6 @@ namespace SymplifyConversion\SSTSDK\Config;
 
 final class ProjectConfig
 {
-
     public int $id;
 
     public string $name;
@@ -75,5 +74,4 @@ final class ProjectConfig
 
         return null;
     }
-
 }
