@@ -6,7 +6,6 @@ namespace SymplifyConversion\SSTSDK\Config;
 
 final class RunState
 {
-
     public const PAUSED = 0;
     public const ACTIVE = 1;
 
@@ -21,5 +20,4 @@ final class RunState
                 return self::PAUSED;
         }
     }
-
 }

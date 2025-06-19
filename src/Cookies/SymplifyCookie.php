@@ -13,7 +13,6 @@ use SymplifyConversion\SSTSDK\Config\VariationConfig;
  */
 final class SymplifyCookie
 {
-
     private const JSON_COOKIE_NAME = 'sg_cookies';
     private const JSON_COOKIE_VERSION_KEY = '_g';
     private const JSON_COOKIE_VISITOR_ID_KEY = 'visid';
@@ -41,8 +40,7 @@ final class SymplifyCookie
         string $websiteID,
         CookieJar $cookies,
         LoggerInterface $logger
-    ): ?SymplifyCookie
-    {
+    ): ?SymplifyCookie {
         $cookieJSON = $cookies->getCookie(self::JSON_COOKIE_NAME);
 
         if (is_null($cookieJSON)) {
@@ -124,7 +122,7 @@ final class SymplifyCookie
 
     public function getAllocation(ProjectConfig $project): ?VariationConfig
     {
-        $allocated = $this->getValue($project->id. "");
+        $allocated = $this->getValue($project->id . "");
 
         if ('array' === gettype($allocated)) {
             return $project->findVariationWithID($allocated[0]);
@@ -162,16 +160,17 @@ final class SymplifyCookie
      *
      * @return array<int>
      */
-    public function getPreviewData(): ?array {
+    public function getPreviewData(): ?array
+    {
         $projectID = $this->getValue(self::JSON_COOKIE_PREVIEW_PROJECT_KEY);
 
-        if(!is_int($projectID)){
+        if (!is_int($projectID)) {
             return null;
         }
 
         $variationID = $this->getValue(self::JSON_COOKIE_PREVIEW_VARIATION_KEY);
 
-        if(!is_int($variationID)){
+        if (!is_int($variationID)) {
             return null;
         }
 
@@ -207,5 +206,4 @@ final class SymplifyCookie
 
         return sprintf('%s%s-%s-%s-%s-%s%s%s', ...str_split(bin2hex($buf), 4));
     }
-
 }

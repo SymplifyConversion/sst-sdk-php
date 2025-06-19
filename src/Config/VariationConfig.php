@@ -6,19 +6,18 @@ namespace SymplifyConversion\SSTSDK\Config;
 
 final class VariationConfig
 {
-
     public int $id;
 
     public string $name;
 
     /** @var int relative variation weight */
     public int $weight;
-    
+
     public int $state;
 
     public float $distribution;
 
-    function __construct(int $id, string $name, int $state, int $weight, float $distribution)
+    public function __construct(int $id, string $name, int $state, int $weight, float $distribution)
     {
         $this->id     = $id;
         $this->name   = $name;
@@ -41,5 +40,4 @@ final class VariationConfig
 
         return new VariationConfig($id, $name, $state, (int)$weight, $distribution);
     }
-
 }

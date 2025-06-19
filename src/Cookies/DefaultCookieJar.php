@@ -6,7 +6,6 @@ namespace SymplifyConversion\SSTSDK\Cookies;
 
 final class DefaultCookieJar implements CookieJar
 {
-
     private ?string $cookieDomain;
 
     /**
@@ -36,5 +35,4 @@ final class DefaultCookieJar implements CookieJar
 
         setcookie($name, $value, $expireTime, '/', $this->cookieDomain ?? '', true);
     }
-
 }

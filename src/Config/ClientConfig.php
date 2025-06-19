@@ -11,7 +11,6 @@ use Psr\Log\NullLogger;
 
 final class ClientConfig
 {
-
     private const DEFAULT_CDN_BASEURL = 'https://cdn-sitegainer.com';
 
     /** @var string $websiteID the ID of the website you run tests on */
@@ -39,7 +38,7 @@ final class ClientConfig
      * @param string      $websiteID your website ID
      * @param string|null $cookieDomain set to override the domain for Symplify cookie writing
      */
-    function __construct(string $websiteID, ?string $cookieDomain = null)
+    public function __construct(string $websiteID, ?string $cookieDomain = null)
     {
         $this->websiteID        = $websiteID;
         $this->cdnBaseURL       = self::DEFAULT_CDN_BASEURL;
@@ -138,5 +137,4 @@ final class ClientConfig
     {
         return $this->cookieDomain;
     }
-
 }

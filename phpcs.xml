@@ -2,6 +2,7 @@
 <ruleset name="SSTSDK">
 
     <arg name="basepath" value="."/>
+    <arg name="ignore_warnings_on_exit" value="1"/>
 
     <!-- SlevomatCodingStandard.Files.TypeNameMatchesFileName is too wonky -->
     <rule ref="vendor/suin/phpcs-psr4-sniff/src/Suin"/>

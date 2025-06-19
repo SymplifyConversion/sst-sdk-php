@@ -9,7 +9,6 @@ use Psr\Log\LogLevel;
 
 final class ErrorLogLogger extends AbstractLogger
 {
-
     private const ANSI_RED = 31;
     private const ANSI_GREEN = 32;
     private const ANSI_YELLOW = 33;
@@ -24,7 +23,7 @@ final class ErrorLogLogger extends AbstractLogger
         fclose($stderr);
     }
 
-    public function log($level, $message, array $context = []): void // phpcs:ignore
+    public function log($level, string|\Stringable $message, array $context = []): void // phpcs:ignore
     {
         $pre = $post = '';
 
@@ -36,7 +35,7 @@ final class ErrorLogLogger extends AbstractLogger
         error_log($pre . sprintf("[%s] %s", strtoupper($level), self::interpolate($message, $context)) . $post);
     }
 
-    static function colorCode(string $level): string
+    public static function colorCode(string $level): string
     {
         switch ($level) {
             case LogLevel::EMERGENCY:
@@ -61,7 +60,7 @@ final class ErrorLogLogger extends AbstractLogger
      *
      * @param array<mixed> $context
      */
-    static function interpolate(string $message, array $context): string
+    public static function interpolate(string|\Stringable $message, array $context): string
     {
         $replace = [];
 
@@ -77,7 +76,6 @@ final class ErrorLogLogger extends AbstractLogger
             $replace['{' . $key . '}'] = strval($val);
         }
 
-        return strtr($message, $replace);
+        return strtr((string) $message, $replace);
     }
-
 }

@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
  */
 final class PrefixedLogger extends AbstractLogger
 {
-
     /** @var string concat this string before all log messages */
     private string $prefix;
 
@@ -25,9 +24,8 @@ final class PrefixedLogger extends AbstractLogger
         $this->wrapped = $wrapped;
     }
 
-    public function log($level, $message, array $context = []): void // phpcs:ignore
+    public function log($level, string|\Stringable $message, array $context = []): void // phpcs:ignore
     {
         $this->wrapped->log($level, $this->prefix . $message, $context);
     }
-
 }
