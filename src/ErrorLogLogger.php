@@ -60,7 +60,7 @@ final class ErrorLogLogger extends AbstractLogger
      *
      * @param array<mixed> $context
      */
-    public static function interpolate(string $message, array $context): string
+    public static function interpolate(string|\Stringable $message, array $context): string
     {
         $replace = [];
 
